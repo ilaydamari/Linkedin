@@ -1,0 +1,5 @@
+scraping linkedin.com : "data analyst; israel"
+
+select *
+from "LINK"."PUBLIC"."linkedin"
+
