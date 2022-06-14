@@ -5,7 +5,7 @@ bla bla
 ## SQL Queries
 ### 1) Bussiness Question - Degree vs. Course, Which Path will Increase your Chances to become data analyst?
 
-```ruby
+```sql
 view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
