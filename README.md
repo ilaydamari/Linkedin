@@ -29,7 +29,7 @@ The project consists :
 
 ## SQL Queries
 Note : Becuase of the raw data from the scraping tool, most of the questions contain more Views build one on another to clean and preper the data.
-       Each View seperated with doted line (------)
+       Each View seperated with doted line (------)'
        
 ### 1) Bussiness Question - Degree vs. Course, Which path will Increase your chances to become Data Analyst?
 ```sql
@@ -325,796 +325,7 @@ and PART1_SCHOOL not like '%Academic%'
 and EDUCATION not like '%null%';
 ```
 
-### 2) Bussiness Question - In what areas do most Analysts work at?
-```sql
-View 1
-create or replace view LINK.PUBLIC.LOCATIONS(
-	PROFILELINK,
-	LOCATION,
-	CURRENTJOB,
-	LOCATIONS
-) as select profilelink, Location, currentjob, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
-where currentjob not like '%null%'
-and Location not like '%null%'
-and (currentjob like '%Analyst%' 
-or currentjob like '%analyst%'
-or currentjob like '%data%'
-or currentjob like '%Data%')
-group by profilelink, Location, currentjob
- 
-union
-
-select profilelink, CurrentLocation2, currentjob2, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
-where currentjob2 not like '%null%'
-and CurrentLocation2 not like '%null%'
-and (currentjob2 like '%Analyst%' 
-or currentjob2 like '%analyst%'
-or currentjob2 like '%data%'
-or currentjob2 like '%Data%')
-group by profilelink, CurrentLocation2, currentjob2
-
-union
-
-select profilelink, CurrentLocation3, currentjob3, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
-where currentjob3 not like '%null%'
-and CurrentLocation3 not like '%null%'
-and (currentjob3 like '%Analyst%' 
-or currentjob3 like '%analyst%'
-or currentjob3 like '%data%'
-or currentjob3 like '%Data%')
-group by profilelink, CurrentLocation3, currentjob3
-
-union
-
-select profilelink, LASTJOBLOCATION1, LASTJOB, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
-where LASTJOB not like '%null%'
-and LASTJOBLOCATION1 not like '%null%'
-and (LASTJOB like '%Analyst%' 
-or LASTJOB like '%analyst%'
-or LASTJOB like '%data%'
-or LASTJOB like '%Data%')
-group by profilelink, LASTJOBLOCATION1, LASTJOB
-
-union	
-
-select profilelink, PASTLOCATION2, PASTJOB2, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
-where PASTJOB2 not like '%null%'
-and PASTLOCATION2 not like '%null%'
-and (PASTJOB2 like '%Analyst%' 
-or PASTJOB2 like '%analyst%'
-or PASTJOB2 like '%data%'
-or PASTJOB2 like '%Data%')
-group by profilelink, PASTLOCATION2, PASTJOB2
-
-union
-	
-select profilelink, PASTLOCATION3, PASTJOB3, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
-where PASTJOB3 not like '%null%'
-and PASTLOCATION3 not like '%null%'
-and (PASTJOB3 like '%Analyst%' 
-or PASTJOB3 like '%analyst%'
-or PASTJOB3 like '%data%'
-or PASTJOB3 like '%Data%')
-group by profilelink, PASTLOCATION3, PASTJOB3
-
------------------------------------------------------------------------------------------
-View 2
-
-create or replace view LINK.PUBLIC."LOCATIONS_parts"(
-	PROFILELINK,
-	LOCATION,
-	PART_1,
-	PART_2,
-	PART_3,
-	PART_4,
-	CURRENTJOB,
-	LOCATIONS
-) as select profilelink, LOCATION,
-split_part((LOCATION), ';',1):: variant part_1,
-split_part((LOCATION), ';',2):: variant part_2,
-split_part((LOCATION), ';',3):: variant part_3,
-split_part((LOCATION), ';',4):: variant part_4,
-CURRENTJOB,
-LOCATIONS
-
-from 
-"LINK"."PUBLIC"."LOCATIONS"
-;
-
------------------------------------------------------------------------------------------
-View 3
-
-create or replace view LINK.PUBLIC."LOCATIONS_Total"(
-	PROFILELINK,
-	CITY,
-	LOCATION_NUM
-) as 
-select profilelink, replace (PART_1, '"', '') as City, sum(LOCATIONS) as Location_Num
-from "LINK"."PUBLIC"."LOCATIONS_parts"
-group by 1,2;
-
------------------------------------------------------------------------------------------
-View 4
-
-create or replace view LINK.PUBLIC."Region_City"(
-	PROFILELINK,
-	CITY,
-	REGION,
-	NUMBER
-) as
-select profilelink, City,
-     case when city like any ('%Tel Aviv%', '%Herzliya%', '%Ramat Gan%', '%Petah Tikva%', '%Givatayim%', '%Bnei Brak%', '%Rishon%', '%Lod%', '%ananna%', 'Holon','%Reẖovot%', '%Haדharon%',
-                          '%Rosh Ha%', 'Kiryat Ono', '%anana%', '%Yavne%', '%Nes Ziyona%', '%Hasharon%', '%Rehovot%', '%Ramla%', '%Ramat Gan%', 'Kadima', 'Shefayim',  'Ness Ziona',  'Airport City', 'Kfar Sava') then 'Central'
-     when city like any ('%Beersheba%','%Glil-Yam%', '%KIRYAT GAT%', '%Kiryat Gat%') then 'South'
-     when city like any ('%Haifa%', '%Netanya%', '%Yokne%', '%Ayin%', 'Yakum') then 'North'
-     when city like any ('%Jerusalem%', '%kadima%',  '%airport%', '%Modiin%') then 'East'
-     when city like any ('Unknown', '%Israel%', '%israel%', '%Isreal%', '%Israël%', 'Remote', '%Bank Leumi%', '%Hachshara%', 'Central', 'Centre', '%South%', '%south%', '%North%', '%north%') then 'Unknown'
-     else 'World'
-     end Region,
-     sum(LOCATION_NUM) as Number
-from 
-(
-select case when city like any ('%Tel Aviv%', '%tel aviv%', 'Tel-Aviv') then 'Tel Aviv'
-            when city like any ('%Ramat Ga%', '%ramat gan%') then 'Ramat Gan'
-            when city like any ('%Herz%', '%Hertz%', '%herz%') then 'Herzliya'
-            when city like any ('%Jerus%', '%jerus%') then 'Jerusalem'
-            when city like any ('%Petaẖ%', '%Tiqwa%', '%petaẖ%', '%Petah%') then 'Petah Tikva'
-            when city like any ('%Ataym%', '%atayim%', '%Giva%', '%giva%') then 'Givatayim'
-            when city like any ('%haifa%', '%Haifa%', '%Hayfa%') then 'Haifa'
-            when city like any ('%Qiryat%', '%KIRYAT GAT%', '%qiryat%', '%Kiryat Gat%', '%kiryat gat%') then 'Kiryat Gat'
-            when city like any ('%rehovot%', '%Rehovot%','%Reẖovo%', '%reẖovo%' ) then 'Rehovot'
-            when city like any ('%Kefar Sava%', '%Kfar Sava%', '%kefar sava%', '%kfar sava%', '%KFAR SAVA%') then 'Kfar Sava'
-            when city like any ('%ananna%', '%anana%') then 'Raananna'
-            when city like any ('%bear%', '%Beer%', '%beer%', '%sheba%') then 'Beersheba'
-            when city like any ('%Modiin%', '%Maccabim%', '%modiin%', '%maccabim%') then 'Modiin Maccabim Reut'
-            when city like any ('%kadima%', '%Kadima%', '%Tzoran%', '%tzoran%') then 'Kadima'
-            when city like any ('%yakum%', '%Yakum%') then 'Yakum'
-            when city like any ('%caesar%', '%Caesarea%', '%caesarea%') then 'Caesarea'
-            when city like any ('%brak%', '%Bnei Brak%', '%braq%', '%bney%', '%Bene%') then 'Bnei Brak'
-            when city like any ('%Raml%', '%raml%') then 'Ramla'
-            when city like any ('%yokne%', '%Yokne%') then 'Yokneam'
-            when city like any ('%glil-Yam%', '%Glil-Yam%') then 'Glil-Yam'
-            when city like any ('%netanya%', '%Netanya%') then 'Netanya'
-            when city like any ('%hasharon%', '%HaSharon%') then 'Hod Hasharon'
-            when city like any ('%ramat hasharon%', '%Ramat Hasharon%', 'Hasharon') then 'Ramat Hasharon'
-            when city like any ('%holon%', '%Holon%') then 'Holon'
-            when city like any ('%rishon%', '%Rishon%') then 'Rishon Letzion'
-            when city like any ('%ness%', '%Ziona%', '%Tziona%', 'Nes Ziyyona') then 'Ness Ziona'
-            when city like any ('%shefayim%', '%Shefayim%') then 'Shefayim'
-            when city like any ('%lod%', '%Lod%') then 'Lod'
-            when city like any ('%Yavne%', '%yavne%') then 'Yavne'
-            when city like any ('%ha‘ayin%', '%Ha‘Ayin%') then 'Rosh Ha-Ayin'
-            when city like any ('%ono%', '%Ono%') then 'Kiryat Ono'
-            when city like any ('%Jerus%', '%jerus%') then 'Jerusalem'
-            when city like any ('%airport%') then 'Airport City'
-
-            else city
-            end City,
-  
-profilelink, LOCATION_NUM
-  from "LINK"."PUBLIC"."LOCATIONS_Total"
-)
-group by 
-1,2, 3
-order by Number desc;
-```
-### 3) Bussiness Question - What is the Percentage of Analysts that Work Part Time vs Full Time?
-```sql
-view 1 
-
-create or replace view LINK.PUBLIC."Job_Types"(
-	PROFILELINK,
-	COMPANY1,
-	POSITION_SCOPE,
-	CURRENTCOMPANY2,
-	CURRENTCOMPANY3,
-	LASTJOB_COMPANY,
-	PASTCOMPANY2,
-	PASTCOMPANY3,
-	CURRENTJOB,
-	CURRENTJOB2,
-	CURRENTJOB3,
-	LASTJOB,
-	PASTJOB2,
-	PASTJOB3
-) as
-select PROFILELINK,
-COMPANY1,
-POSITION_SCOPE,
-CURRENTCOMPANY2,
-CURRENTCOMPANY3,
-lastjob_company,
-pastcompany2,
-pastcompany3,
-CURRENTJOB,
-CURRENTJOB2,
-CURRENTJOB3,
-LASTJOB,
-pastjob2,
-pastjob3
-from "LINK"."PUBLIC"."LINKEDIN"
-WHERE LASTJOB_COMPANY not like '%Part-time%'
-or   LASTJOB_COMPANY  not like '%PART-TIME%'
-or   LASTJOB_COMPANY  not like'%part-time%'
-or   LASTJOB_COMPANY  not like '%Part-Time%';
-
------------------------------------------------------------------------------------------
-view 2
-
-create or replace view LINK.PUBLIC.JPB_TYPES2(
-	PROFILELINK1,
-	POSITION,
-	CURRENTJOB,
-	PROFILELINK2,
-	POSITION2,
-	CURRENTJOB2,
-	PROFILELINK3,
-	POSITION3,
-	CURRENTJOB3,
-	PROFILELINK4,
-	LAST_POSITION,
-	LASTJOB,
-	PROFILELINK5,
-	LAST_POSITION2,
-	PASTJOB2,
-	PROFILELINK6,
-	LAST_POSITION3,
-	PASTJOB3
-) as 
-
-select a.PROFILELINK as "a.PROFILELINK",
-POSITION,
-CURRENTJOB,
-b.PROFILELINK as "b.PROFILELINK",
-POSITION2,
-CURRENTJOB2,
-c.PROFILELINK as "c.PROFILELINK",
-POSITION3,
-CURRENTJOB3,
-d.PROFILELINK as "d.PROFILELINK",
-LAST_POSITION,
-LASTJOB,
-e.PROFILELINK as "e.PROFILELINK",
-LAST_POSITION2,
-PASTJOB2,
-f.PROFILELINK as "f.PROFILELINK",
-LAST_POSITION3,
-PASTJOB3
-
-from
-(select PROFILELINK, CURRENTJOB, COMPANY1, POSITION_SCOPE, replace (POSITION_SCOPE, POSITION_SCOPE, 'Full Time') as POSITION
-
-from "LINK"."PUBLIC"."Job_Types"
-WHERE COMPANY1 not like '%null%'
-and   COMPANY1 not like '%Null%'
-and   COMPANY1 not like '%NULL%'
-and   COMPANY1 not like '%NULL%'
-and   POSITION_SCOPE not like '%Part-time%'
-) a
-
-full join
-
-(select PROFILELINK, CURRENTJOB2, CURRENTCOMPANY2, replace (CURRENTCOMPANY2, CURRENTCOMPANY2, 'Full Time') as POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB2	 not like '%null%'
-and   CURRENTJOB2	 not like '%Null%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTCOMPANY2 not like '%Part-time%' ) b
-
-on a.PROFILELINK=b.PROFILELINK
-
-full join
-
-
-(select PROFILELINK, CURRENTJOB3, CURRENTCOMPANY3, replace (CURRENTCOMPANY3, CURRENTCOMPANY3, 'Full Time') as POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB3	 not like '%null%'
-and   CURRENTJOB3	 not like '%Null%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTCOMPANY3 not like '%Part-time%') c
-
-on a.PROFILELINK=c.PROFILELINK
-
-full join
-
-(select PROFILELINK, LASTJOB, LASTJOB_COMPANY	, replace (LASTJOB_COMPANY	, LASTJOB_COMPANY	, 'Full Time') as last_POSITION
-from "LINK"."PUBLIC"."Job_Types"
-WHERE LASTJOB	 not like '%null%'
-and   LASTJOB	 not like '%Null%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB_COMPANY	 not like '%Part-time%') d
-
-on a.PROFILELINK=d.PROFILELINK
-
-full join 
-
-(select PROFILELINK, PASTJOB2, PASTCOMPANY2		, replace (PASTCOMPANY2		, PASTCOMPANY2		, 'Full Time') as last_POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB2	 not like '%null%'
-and   PASTJOB2	 not like '%Null%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTCOMPANY2		 not like '%Part-time%') e
-
-on a.PROFILELINK=e.PROFILELINK
-
-full join 
-
-(select PROFILELINK, PASTJOB3, PASTCOMPANY3		, replace (PASTCOMPANY3		, PASTCOMPANY3		, 'Full Time') as last_POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB3	 not like '%null%'
-and   PASTJOB3	 not like '%Null%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTCOMPANY3		 not like '%Part-time%') f
-
-on a.PROFILELINK=f.PROFILELINK
-
-;
-
------------------------------------------------------------------------------------------
-view 3
-
-create or replace view LINK.PUBLIC.ALL_POSITIONS_NUMBER(
-	FULL_TIME1,
-	FULL_TIME2,
-	FULL_TIME3,
-	FULL_TIME4,
-	FULL_TIME5,
-	FULL_TIME6
-) as select 
-count(a.POSITION) as Full_Time1,
-count(b.POSITION2) as Full_Time2,
-count(c.POSITION3) as Full_Time3,
-count(d.LAST_POSITION	) as Full_Time4,
-count(e.LAST_POSITION2) as Full_Time5,
-count(f.LAST_POSITION3) as Full_Time6
-from 
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
-CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) a
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
-CURRENTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) b
-on a.PROFILELINK1=b.PROFILELINK2
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE  CURRENTJOB3	LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) c
-on a.PROFILELINK1=c.PROFILELINK3
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- LASTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) d
-on a.PROFILELINK1=d.PROFILELINK4
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- PASTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) e
-on a.PROFILELINK1=e.PROFILELINK5
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- PASTJOB3 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) f
-
-on a.PROFILELINK1=f.PROFILELINK6
-
-
------------------------------------------------------------------------------------------
-view 4
-
-create or replace view LINK.PUBLIC."Full_Time_Analyst_Total"(
-	TOTAL
-) as
-select sum (
-Full_Time1 + Full_Time2 + Full_Time3 + Full_Time4 + Full_Time5 + Full_Time6
-) as Total
-from
-"LINK"."PUBLIC"."ALL_POSITIONS_NUMBER";
-
------------------------------------------------------------------------------------------
-view 5
-
-create or replace view LINK.PUBLIC."Part_Time_Analyst_Total"(
-	TOTAL
-) as
-select count(*) as Total
-from (
-select profilelink, position_scope,currentjob
-from  "LINK"."PUBLIC"."linkedin"
-where  position_scope  like '%Part-time%' and CURRENTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,CURRENTCOMPANY2
-,currentjob2
-from  "LINK"."PUBLIC"."linkedin"
-where  CURRENTCOMPANY2
-  like '%Part-time%' and CURRENTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,CURRENTCOMPANY3
-,currentjob3
-from  "LINK"."PUBLIC"."linkedin"
-where  CURRENTCOMPANY3
-  like '%Part-time%' and CURRENTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,lastjob,lastjob_company
-from "LINK"."PUBLIC"."linkedin"
-where lastjob_company like '%Part-time%' and lastjob like any ('%Analyst%','%analyst','%ANALYST%')
-union 
-select profilelink,pastjob2,pastcompany2
-from "LINK"."PUBLIC"."linkedin"
-where pastcompany2 like '%Part-time%' and pastjob2 like any ('%Analyst%','%analyst','%ANALYST%')
-union
-select profilelink,pastjob3,pastcompany3
-from "LINK"."PUBLIC"."linkedin"
-where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analyst','%ANALYST%')
-)
-;
-
------------------------------------------------------------------------------------------
-View 6
-
-create or replace view LINK.PUBLIC."Part&Full_Time_Analyst_Total"(
-	JOB_TYPE,
-	TOTAL
-) as
-
-
-
-
-select case when Total = (select TOTAL from "LINK"."PUBLIC"."Part_Time_Analyst_Total") then 'Part Time'
-            when Total = (select TOTAL from "LINK"."PUBLIC"."Full_Time_Analyst_Total") then 'Full Time'
-            end as Job_Type,
-            Total
-from 
-(
-select Total
-from 
-"LINK"."PUBLIC"."Part_Time_Analyst_Total" 
-union
-select Total
-from
-"LINK"."PUBLIC"."Full_Time_Analyst_Total" 
-  );
-```
-### 4) Bussiness Question - How Long it Will Take to be Senior Analyst/DS/DE
-```sql
-view 1 
-
-create or replace view LINK.PUBLIC."Job_Types"(
-	PROFILELINK,
-	COMPANY1,
-	POSITION_SCOPE,
-	CURRENTCOMPANY2,
-	CURRENTCOMPANY3,
-	LASTJOB_COMPANY,
-	PASTCOMPANY2,
-	PASTCOMPANY3,
-	CURRENTJOB,
-	CURRENTJOB2,
-	CURRENTJOB3,
-	LASTJOB,
-	PASTJOB2,
-	PASTJOB3
-) as
-select PROFILELINK,
-COMPANY1,
-POSITION_SCOPE,
-CURRENTCOMPANY2,
-CURRENTCOMPANY3,
-lastjob_company,
-pastcompany2,
-pastcompany3,
-CURRENTJOB,
-CURRENTJOB2,
-CURRENTJOB3,
-LASTJOB,
-pastjob2,
-pastjob3
-from "LINK"."PUBLIC"."LINKEDIN"
-WHERE LASTJOB_COMPANY not like '%Part-time%'
-or   LASTJOB_COMPANY  not like '%PART-TIME%'
-or   LASTJOB_COMPANY  not like'%part-time%'
-or   LASTJOB_COMPANY  not like '%Part-Time%';
-
------------------------------------------------------------------------------------------
-view 2
-
-create or replace view LINK.PUBLIC.JPB_TYPES2(
-	PROFILELINK1,
-	POSITION,
-	CURRENTJOB,
-	PROFILELINK2,
-	POSITION2,
-	CURRENTJOB2,
-	PROFILELINK3,
-	POSITION3,
-	CURRENTJOB3,
-	PROFILELINK4,
-	LAST_POSITION,
-	LASTJOB,
-	PROFILELINK5,
-	LAST_POSITION2,
-	PASTJOB2,
-	PROFILELINK6,
-	LAST_POSITION3,
-	PASTJOB3
-) as 
-
-select a.PROFILELINK as "a.PROFILELINK",
-POSITION,
-CURRENTJOB,
-b.PROFILELINK as "b.PROFILELINK",
-POSITION2,
-CURRENTJOB2,
-c.PROFILELINK as "c.PROFILELINK",
-POSITION3,
-CURRENTJOB3,
-d.PROFILELINK as "d.PROFILELINK",
-LAST_POSITION,
-LASTJOB,
-e.PROFILELINK as "e.PROFILELINK",
-LAST_POSITION2,
-PASTJOB2,
-f.PROFILELINK as "f.PROFILELINK",
-LAST_POSITION3,
-PASTJOB3
-
-from
-(select PROFILELINK, CURRENTJOB, COMPANY1, POSITION_SCOPE, replace (POSITION_SCOPE, POSITION_SCOPE, 'Full Time') as POSITION
-
-from "LINK"."PUBLIC"."Job_Types"
-WHERE COMPANY1 not like '%null%'
-and   COMPANY1 not like '%Null%'
-and   COMPANY1 not like '%NULL%'
-and   COMPANY1 not like '%NULL%'
-and   POSITION_SCOPE not like '%Part-time%'
-) a
-
-full join
-
-(select PROFILELINK, CURRENTJOB2, CURRENTCOMPANY2, replace (CURRENTCOMPANY2, CURRENTCOMPANY2, 'Full Time') as POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB2	 not like '%null%'
-and   CURRENTJOB2	 not like '%Null%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTCOMPANY2 not like '%Part-time%' ) b
-
-on a.PROFILELINK=b.PROFILELINK
-
-full join
-
-
-(select PROFILELINK, CURRENTJOB3, CURRENTCOMPANY3, replace (CURRENTCOMPANY3, CURRENTCOMPANY3, 'Full Time') as POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB3	 not like '%null%'
-and   CURRENTJOB3	 not like '%Null%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTCOMPANY3 not like '%Part-time%') c
-
-on a.PROFILELINK=c.PROFILELINK
-
-full join
-
-(select PROFILELINK, LASTJOB, LASTJOB_COMPANY	, replace (LASTJOB_COMPANY	, LASTJOB_COMPANY	, 'Full Time') as last_POSITION
-from "LINK"."PUBLIC"."Job_Types"
-WHERE LASTJOB	 not like '%null%'
-and   LASTJOB	 not like '%Null%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB_COMPANY	 not like '%Part-time%') d
-
-on a.PROFILELINK=d.PROFILELINK
-
-full join 
-
-(select PROFILELINK, PASTJOB2, PASTCOMPANY2		, replace (PASTCOMPANY2		, PASTCOMPANY2		, 'Full Time') as last_POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB2	 not like '%null%'
-and   PASTJOB2	 not like '%Null%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTCOMPANY2		 not like '%Part-time%') e
-
-on a.PROFILELINK=e.PROFILELINK
-
-full join 
-
-(select PROFILELINK, PASTJOB3, PASTCOMPANY3		, replace (PASTCOMPANY3		, PASTCOMPANY3		, 'Full Time') as last_POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB3	 not like '%null%'
-and   PASTJOB3	 not like '%Null%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTCOMPANY3		 not like '%Part-time%') f
-
-on a.PROFILELINK=f.PROFILELINK
-
-;
-
------------------------------------------------------------------------------------------
-view 3
-
-create or replace view LINK.PUBLIC.ALL_POSITIONS_NUMBER(
-	FULL_TIME1,
-	FULL_TIME2,
-	FULL_TIME3,
-	FULL_TIME4,
-	FULL_TIME5,
-	FULL_TIME6
-) as select 
-count(a.POSITION) as Full_Time1,
-count(b.POSITION2) as Full_Time2,
-count(c.POSITION3) as Full_Time3,
-count(d.LAST_POSITION	) as Full_Time4,
-count(e.LAST_POSITION2) as Full_Time5,
-count(f.LAST_POSITION3) as Full_Time6
-from 
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
-CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) a
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
-CURRENTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) b
-on a.PROFILELINK1=b.PROFILELINK2
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE  CURRENTJOB3	LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) c
-on a.PROFILELINK1=c.PROFILELINK3
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- LASTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) d
-on a.PROFILELINK1=d.PROFILELINK4
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- PASTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) e
-on a.PROFILELINK1=e.PROFILELINK5
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- PASTJOB3 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) f
-
-on a.PROFILELINK1=f.PROFILELINK6
-
-
------------------------------------------------------------------------------------------
-view 4
-
-create or replace view LINK.PUBLIC."Full_Time_Analyst_Total"(
-	TOTAL
-) as
-select sum (
-Full_Time1 + Full_Time2 + Full_Time3 + Full_Time4 + Full_Time5 + Full_Time6
-) as Total
-from
-"LINK"."PUBLIC"."ALL_POSITIONS_NUMBER";
-
------------------------------------------------------------------------------------------
-view 5
-
-create or replace view LINK.PUBLIC."Part_Time_Analyst_Total"(
-	TOTAL
-) as
-select count(*) as Total
-from (
-select profilelink, position_scope,currentjob
-from  "LINK"."PUBLIC"."linkedin"
-where  position_scope  like '%Part-time%' and CURRENTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,CURRENTCOMPANY2
-,currentjob2
-from  "LINK"."PUBLIC"."linkedin"
-where  CURRENTCOMPANY2
-  like '%Part-time%' and CURRENTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,CURRENTCOMPANY3
-,currentjob3
-from  "LINK"."PUBLIC"."linkedin"
-where  CURRENTCOMPANY3
-  like '%Part-time%' and CURRENTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,lastjob,lastjob_company
-from "LINK"."PUBLIC"."linkedin"
-where lastjob_company like '%Part-time%' and lastjob like any ('%Analyst%','%analyst','%ANALYST%')
-union 
-select profilelink,pastjob2,pastcompany2
-from "LINK"."PUBLIC"."linkedin"
-where pastcompany2 like '%Part-time%' and pastjob2 like any ('%Analyst%','%analyst','%ANALYST%')
-union
-select profilelink,pastjob3,pastcompany3
-from "LINK"."PUBLIC"."linkedin"
-where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analyst','%ANALYST%')
-)
-;
-
------------------------------------------------------------------------------------------
-View 6
-
-create or replace view LINK.PUBLIC."Part&Full_Time_Analyst_Total"(
-	JOB_TYPE,
-	TOTAL
-) as
-
-
-
-
-select case when Total = (select TOTAL from "LINK"."PUBLIC"."Part_Time_Analyst_Total") then 'Part Time'
-            when Total = (select TOTAL from "LINK"."PUBLIC"."Full_Time_Analyst_Total") then 'Full Time'
-            end as Job_Type,
-            Total
-from 
-(
-select Total
-from 
-"LINK"."PUBLIC"."Part_Time_Analyst_Total" 
-union
-select Total
-from
-"LINK"."PUBLIC"."Full_Time_Analyst_Total" 
-  );
-```
-### 5) Bussiness Question - Wich Degree is the most common between Data Analysts?
+### 2) Bussiness Question - Wich Degree is the most common between Data Analysts?
 ```sql
 view 1
 
@@ -1478,6 +689,796 @@ PEOPLE
 from "LINK"."PUBLIC"."Sum_of_Education_Parts";
 ```
 
+### 3) Bussiness Question - In what areas do most Analysts work at?
+```sql
+View 1
+create or replace view LINK.PUBLIC.LOCATIONS(
+	PROFILELINK,
+	LOCATION,
+	CURRENTJOB,
+	LOCATIONS
+) as select profilelink, Location, currentjob, count(profilelink) as locations
+from "LINK"."PUBLIC"."LINKEDIN"
+where currentjob not like '%null%'
+and Location not like '%null%'
+and (currentjob like '%Analyst%' 
+or currentjob like '%analyst%'
+or currentjob like '%data%'
+or currentjob like '%Data%')
+group by profilelink, Location, currentjob
+ 
+union
+
+select profilelink, CurrentLocation2, currentjob2, count(profilelink) as locations
+from "LINK"."PUBLIC"."LINKEDIN"
+where currentjob2 not like '%null%'
+and CurrentLocation2 not like '%null%'
+and (currentjob2 like '%Analyst%' 
+or currentjob2 like '%analyst%'
+or currentjob2 like '%data%'
+or currentjob2 like '%Data%')
+group by profilelink, CurrentLocation2, currentjob2
+
+union
+
+select profilelink, CurrentLocation3, currentjob3, count(profilelink) as locations
+from "LINK"."PUBLIC"."LINKEDIN"
+where currentjob3 not like '%null%'
+and CurrentLocation3 not like '%null%'
+and (currentjob3 like '%Analyst%' 
+or currentjob3 like '%analyst%'
+or currentjob3 like '%data%'
+or currentjob3 like '%Data%')
+group by profilelink, CurrentLocation3, currentjob3
+
+union
+
+select profilelink, LASTJOBLOCATION1, LASTJOB, count(profilelink) as locations
+from "LINK"."PUBLIC"."LINKEDIN"
+where LASTJOB not like '%null%'
+and LASTJOBLOCATION1 not like '%null%'
+and (LASTJOB like '%Analyst%' 
+or LASTJOB like '%analyst%'
+or LASTJOB like '%data%'
+or LASTJOB like '%Data%')
+group by profilelink, LASTJOBLOCATION1, LASTJOB
+
+union	
+
+select profilelink, PASTLOCATION2, PASTJOB2, count(profilelink) as locations
+from "LINK"."PUBLIC"."LINKEDIN"
+where PASTJOB2 not like '%null%'
+and PASTLOCATION2 not like '%null%'
+and (PASTJOB2 like '%Analyst%' 
+or PASTJOB2 like '%analyst%'
+or PASTJOB2 like '%data%'
+or PASTJOB2 like '%Data%')
+group by profilelink, PASTLOCATION2, PASTJOB2
+
+union
+	
+select profilelink, PASTLOCATION3, PASTJOB3, count(profilelink) as locations
+from "LINK"."PUBLIC"."LINKEDIN"
+where PASTJOB3 not like '%null%'
+and PASTLOCATION3 not like '%null%'
+and (PASTJOB3 like '%Analyst%' 
+or PASTJOB3 like '%analyst%'
+or PASTJOB3 like '%data%'
+or PASTJOB3 like '%Data%')
+group by profilelink, PASTLOCATION3, PASTJOB3
+
+-----------------------------------------------------------------------------------------
+View 2
+
+create or replace view LINK.PUBLIC."LOCATIONS_parts"(
+	PROFILELINK,
+	LOCATION,
+	PART_1,
+	PART_2,
+	PART_3,
+	PART_4,
+	CURRENTJOB,
+	LOCATIONS
+) as select profilelink, LOCATION,
+split_part((LOCATION), ';',1):: variant part_1,
+split_part((LOCATION), ';',2):: variant part_2,
+split_part((LOCATION), ';',3):: variant part_3,
+split_part((LOCATION), ';',4):: variant part_4,
+CURRENTJOB,
+LOCATIONS
+
+from 
+"LINK"."PUBLIC"."LOCATIONS"
+;
+
+-----------------------------------------------------------------------------------------
+View 3
+
+create or replace view LINK.PUBLIC."LOCATIONS_Total"(
+	PROFILELINK,
+	CITY,
+	LOCATION_NUM
+) as 
+select profilelink, replace (PART_1, '"', '') as City, sum(LOCATIONS) as Location_Num
+from "LINK"."PUBLIC"."LOCATIONS_parts"
+group by 1,2;
+
+-----------------------------------------------------------------------------------------
+View 4
+
+create or replace view LINK.PUBLIC."Region_City"(
+	PROFILELINK,
+	CITY,
+	REGION,
+	NUMBER
+) as
+select profilelink, City,
+     case when city like any ('%Tel Aviv%', '%Herzliya%', '%Ramat Gan%', '%Petah Tikva%', '%Givatayim%', '%Bnei Brak%', '%Rishon%', '%Lod%', '%ananna%', 'Holon','%Reẖovot%', '%Haדharon%',
+                          '%Rosh Ha%', 'Kiryat Ono', '%anana%', '%Yavne%', '%Nes Ziyona%', '%Hasharon%', '%Rehovot%', '%Ramla%', '%Ramat Gan%', 'Kadima', 'Shefayim',  'Ness Ziona',  'Airport City', 'Kfar Sava') then 'Central'
+     when city like any ('%Beersheba%','%Glil-Yam%', '%KIRYAT GAT%', '%Kiryat Gat%') then 'South'
+     when city like any ('%Haifa%', '%Netanya%', '%Yokne%', '%Ayin%', 'Yakum') then 'North'
+     when city like any ('%Jerusalem%', '%kadima%',  '%airport%', '%Modiin%') then 'East'
+     when city like any ('Unknown', '%Israel%', '%israel%', '%Isreal%', '%Israël%', 'Remote', '%Bank Leumi%', '%Hachshara%', 'Central', 'Centre', '%South%', '%south%', '%North%', '%north%') then 'Unknown'
+     else 'World'
+     end Region,
+     sum(LOCATION_NUM) as Number
+from 
+(
+select case when city like any ('%Tel Aviv%', '%tel aviv%', 'Tel-Aviv') then 'Tel Aviv'
+            when city like any ('%Ramat Ga%', '%ramat gan%') then 'Ramat Gan'
+            when city like any ('%Herz%', '%Hertz%', '%herz%') then 'Herzliya'
+            when city like any ('%Jerus%', '%jerus%') then 'Jerusalem'
+            when city like any ('%Petaẖ%', '%Tiqwa%', '%petaẖ%', '%Petah%') then 'Petah Tikva'
+            when city like any ('%Ataym%', '%atayim%', '%Giva%', '%giva%') then 'Givatayim'
+            when city like any ('%haifa%', '%Haifa%', '%Hayfa%') then 'Haifa'
+            when city like any ('%Qiryat%', '%KIRYAT GAT%', '%qiryat%', '%Kiryat Gat%', '%kiryat gat%') then 'Kiryat Gat'
+            when city like any ('%rehovot%', '%Rehovot%','%Reẖovo%', '%reẖovo%' ) then 'Rehovot'
+            when city like any ('%Kefar Sava%', '%Kfar Sava%', '%kefar sava%', '%kfar sava%', '%KFAR SAVA%') then 'Kfar Sava'
+            when city like any ('%ananna%', '%anana%') then 'Raananna'
+            when city like any ('%bear%', '%Beer%', '%beer%', '%sheba%') then 'Beersheba'
+            when city like any ('%Modiin%', '%Maccabim%', '%modiin%', '%maccabim%') then 'Modiin Maccabim Reut'
+            when city like any ('%kadima%', '%Kadima%', '%Tzoran%', '%tzoran%') then 'Kadima'
+            when city like any ('%yakum%', '%Yakum%') then 'Yakum'
+            when city like any ('%caesar%', '%Caesarea%', '%caesarea%') then 'Caesarea'
+            when city like any ('%brak%', '%Bnei Brak%', '%braq%', '%bney%', '%Bene%') then 'Bnei Brak'
+            when city like any ('%Raml%', '%raml%') then 'Ramla'
+            when city like any ('%yokne%', '%Yokne%') then 'Yokneam'
+            when city like any ('%glil-Yam%', '%Glil-Yam%') then 'Glil-Yam'
+            when city like any ('%netanya%', '%Netanya%') then 'Netanya'
+            when city like any ('%hasharon%', '%HaSharon%') then 'Hod Hasharon'
+            when city like any ('%ramat hasharon%', '%Ramat Hasharon%', 'Hasharon') then 'Ramat Hasharon'
+            when city like any ('%holon%', '%Holon%') then 'Holon'
+            when city like any ('%rishon%', '%Rishon%') then 'Rishon Letzion'
+            when city like any ('%ness%', '%Ziona%', '%Tziona%', 'Nes Ziyyona') then 'Ness Ziona'
+            when city like any ('%shefayim%', '%Shefayim%') then 'Shefayim'
+            when city like any ('%lod%', '%Lod%') then 'Lod'
+            when city like any ('%Yavne%', '%yavne%') then 'Yavne'
+            when city like any ('%ha‘ayin%', '%Ha‘Ayin%') then 'Rosh Ha-Ayin'
+            when city like any ('%ono%', '%Ono%') then 'Kiryat Ono'
+            when city like any ('%Jerus%', '%jerus%') then 'Jerusalem'
+            when city like any ('%airport%') then 'Airport City'
+
+            else city
+            end City,
+  
+profilelink, LOCATION_NUM
+  from "LINK"."PUBLIC"."LOCATIONS_Total"
+)
+group by 
+1,2, 3
+order by Number desc;
+```
+### 4) Bussiness Question - What is the Percentage of Analysts that Work Part Time vs Full Time?
+```sql
+view 1 
+
+create or replace view LINK.PUBLIC."Job_Types"(
+	PROFILELINK,
+	COMPANY1,
+	POSITION_SCOPE,
+	CURRENTCOMPANY2,
+	CURRENTCOMPANY3,
+	LASTJOB_COMPANY,
+	PASTCOMPANY2,
+	PASTCOMPANY3,
+	CURRENTJOB,
+	CURRENTJOB2,
+	CURRENTJOB3,
+	LASTJOB,
+	PASTJOB2,
+	PASTJOB3
+) as
+select PROFILELINK,
+COMPANY1,
+POSITION_SCOPE,
+CURRENTCOMPANY2,
+CURRENTCOMPANY3,
+lastjob_company,
+pastcompany2,
+pastcompany3,
+CURRENTJOB,
+CURRENTJOB2,
+CURRENTJOB3,
+LASTJOB,
+pastjob2,
+pastjob3
+from "LINK"."PUBLIC"."LINKEDIN"
+WHERE LASTJOB_COMPANY not like '%Part-time%'
+or   LASTJOB_COMPANY  not like '%PART-TIME%'
+or   LASTJOB_COMPANY  not like'%part-time%'
+or   LASTJOB_COMPANY  not like '%Part-Time%';
+
+-----------------------------------------------------------------------------------------
+view 2
+
+create or replace view LINK.PUBLIC.JPB_TYPES2(
+	PROFILELINK1,
+	POSITION,
+	CURRENTJOB,
+	PROFILELINK2,
+	POSITION2,
+	CURRENTJOB2,
+	PROFILELINK3,
+	POSITION3,
+	CURRENTJOB3,
+	PROFILELINK4,
+	LAST_POSITION,
+	LASTJOB,
+	PROFILELINK5,
+	LAST_POSITION2,
+	PASTJOB2,
+	PROFILELINK6,
+	LAST_POSITION3,
+	PASTJOB3
+) as 
+
+select a.PROFILELINK as "a.PROFILELINK",
+POSITION,
+CURRENTJOB,
+b.PROFILELINK as "b.PROFILELINK",
+POSITION2,
+CURRENTJOB2,
+c.PROFILELINK as "c.PROFILELINK",
+POSITION3,
+CURRENTJOB3,
+d.PROFILELINK as "d.PROFILELINK",
+LAST_POSITION,
+LASTJOB,
+e.PROFILELINK as "e.PROFILELINK",
+LAST_POSITION2,
+PASTJOB2,
+f.PROFILELINK as "f.PROFILELINK",
+LAST_POSITION3,
+PASTJOB3
+
+from
+(select PROFILELINK, CURRENTJOB, COMPANY1, POSITION_SCOPE, replace (POSITION_SCOPE, POSITION_SCOPE, 'Full Time') as POSITION
+
+from "LINK"."PUBLIC"."Job_Types"
+WHERE COMPANY1 not like '%null%'
+and   COMPANY1 not like '%Null%'
+and   COMPANY1 not like '%NULL%'
+and   COMPANY1 not like '%NULL%'
+and   POSITION_SCOPE not like '%Part-time%'
+) a
+
+full join
+
+(select PROFILELINK, CURRENTJOB2, CURRENTCOMPANY2, replace (CURRENTCOMPANY2, CURRENTCOMPANY2, 'Full Time') as POSITION2
+from "LINK"."PUBLIC"."Job_Types"
+WHERE CURRENTJOB2	 not like '%null%'
+and   CURRENTJOB2	 not like '%Null%'
+and   CURRENTJOB2	 not like '%NULL%'
+and   CURRENTJOB2	 not like '%NULL%'
+and   CURRENTCOMPANY2 not like '%Part-time%' ) b
+
+on a.PROFILELINK=b.PROFILELINK
+
+full join
+
+
+(select PROFILELINK, CURRENTJOB3, CURRENTCOMPANY3, replace (CURRENTCOMPANY3, CURRENTCOMPANY3, 'Full Time') as POSITION3
+from "LINK"."PUBLIC"."Job_Types"
+WHERE CURRENTJOB3	 not like '%null%'
+and   CURRENTJOB3	 not like '%Null%'
+and   CURRENTJOB3	 not like '%NULL%'
+and   CURRENTJOB3	 not like '%NULL%'
+and   CURRENTCOMPANY3 not like '%Part-time%') c
+
+on a.PROFILELINK=c.PROFILELINK
+
+full join
+
+(select PROFILELINK, LASTJOB, LASTJOB_COMPANY	, replace (LASTJOB_COMPANY	, LASTJOB_COMPANY	, 'Full Time') as last_POSITION
+from "LINK"."PUBLIC"."Job_Types"
+WHERE LASTJOB	 not like '%null%'
+and   LASTJOB	 not like '%Null%'
+and   LASTJOB	 not like '%NULL%'
+and   LASTJOB	 not like '%NULL%'
+and   LASTJOB_COMPANY	 not like '%Part-time%') d
+
+on a.PROFILELINK=d.PROFILELINK
+
+full join 
+
+(select PROFILELINK, PASTJOB2, PASTCOMPANY2		, replace (PASTCOMPANY2		, PASTCOMPANY2		, 'Full Time') as last_POSITION2
+from "LINK"."PUBLIC"."Job_Types"
+WHERE PASTJOB2	 not like '%null%'
+and   PASTJOB2	 not like '%Null%'
+and   PASTJOB2	 not like '%NULL%'
+and   PASTJOB2	 not like '%NULL%'
+and   PASTCOMPANY2		 not like '%Part-time%') e
+
+on a.PROFILELINK=e.PROFILELINK
+
+full join 
+
+(select PROFILELINK, PASTJOB3, PASTCOMPANY3		, replace (PASTCOMPANY3		, PASTCOMPANY3		, 'Full Time') as last_POSITION3
+from "LINK"."PUBLIC"."Job_Types"
+WHERE PASTJOB3	 not like '%null%'
+and   PASTJOB3	 not like '%Null%'
+and   PASTJOB3	 not like '%NULL%'
+and   PASTJOB3	 not like '%NULL%'
+and   PASTCOMPANY3		 not like '%Part-time%') f
+
+on a.PROFILELINK=f.PROFILELINK
+
+;
+
+-----------------------------------------------------------------------------------------
+view 3
+
+create or replace view LINK.PUBLIC.ALL_POSITIONS_NUMBER(
+	FULL_TIME1,
+	FULL_TIME2,
+	FULL_TIME3,
+	FULL_TIME4,
+	FULL_TIME5,
+	FULL_TIME6
+) as select 
+count(a.POSITION) as Full_Time1,
+count(b.POSITION2) as Full_Time2,
+count(c.POSITION3) as Full_Time3,
+count(d.LAST_POSITION	) as Full_Time4,
+count(e.LAST_POSITION2) as Full_Time5,
+count(f.LAST_POSITION3) as Full_Time6
+from 
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) a
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+CURRENTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) b
+on a.PROFILELINK1=b.PROFILELINK2
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE  CURRENTJOB3	LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) c
+on a.PROFILELINK1=c.PROFILELINK3
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+ LASTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) d
+on a.PROFILELINK1=d.PROFILELINK4
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+ PASTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) e
+on a.PROFILELINK1=e.PROFILELINK5
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+ PASTJOB3 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) f
+
+on a.PROFILELINK1=f.PROFILELINK6
+
+
+-----------------------------------------------------------------------------------------
+view 4
+
+create or replace view LINK.PUBLIC."Full_Time_Analyst_Total"(
+	TOTAL
+) as
+select sum (
+Full_Time1 + Full_Time2 + Full_Time3 + Full_Time4 + Full_Time5 + Full_Time6
+) as Total
+from
+"LINK"."PUBLIC"."ALL_POSITIONS_NUMBER";
+
+-----------------------------------------------------------------------------------------
+view 5
+
+create or replace view LINK.PUBLIC."Part_Time_Analyst_Total"(
+	TOTAL
+) as
+select count(*) as Total
+from (
+select profilelink, position_scope,currentjob
+from  "LINK"."PUBLIC"."linkedin"
+where  position_scope  like '%Part-time%' and CURRENTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
+union
+  
+select profilelink,CURRENTCOMPANY2
+,currentjob2
+from  "LINK"."PUBLIC"."linkedin"
+where  CURRENTCOMPANY2
+  like '%Part-time%' and CURRENTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
+union
+  
+select profilelink,CURRENTCOMPANY3
+,currentjob3
+from  "LINK"."PUBLIC"."linkedin"
+where  CURRENTCOMPANY3
+  like '%Part-time%' and CURRENTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
+union
+  
+select profilelink,lastjob,lastjob_company
+from "LINK"."PUBLIC"."linkedin"
+where lastjob_company like '%Part-time%' and lastjob like any ('%Analyst%','%analyst','%ANALYST%')
+union 
+select profilelink,pastjob2,pastcompany2
+from "LINK"."PUBLIC"."linkedin"
+where pastcompany2 like '%Part-time%' and pastjob2 like any ('%Analyst%','%analyst','%ANALYST%')
+union
+select profilelink,pastjob3,pastcompany3
+from "LINK"."PUBLIC"."linkedin"
+where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analyst','%ANALYST%')
+)
+;
+
+-----------------------------------------------------------------------------------------
+View 6
+
+create or replace view LINK.PUBLIC."Part&Full_Time_Analyst_Total"(
+	JOB_TYPE,
+	TOTAL
+) as
+
+
+
+
+select case when Total = (select TOTAL from "LINK"."PUBLIC"."Part_Time_Analyst_Total") then 'Part Time'
+            when Total = (select TOTAL from "LINK"."PUBLIC"."Full_Time_Analyst_Total") then 'Full Time'
+            end as Job_Type,
+            Total
+from 
+(
+select Total
+from 
+"LINK"."PUBLIC"."Part_Time_Analyst_Total" 
+union
+select Total
+from
+"LINK"."PUBLIC"."Full_Time_Analyst_Total" 
+  );
+```
+### 5) Bussiness Question - How Long it Will Take to be Senior Analyst/DS/DE
+```sql
+view 1 
+
+create or replace view LINK.PUBLIC."Job_Types"(
+	PROFILELINK,
+	COMPANY1,
+	POSITION_SCOPE,
+	CURRENTCOMPANY2,
+	CURRENTCOMPANY3,
+	LASTJOB_COMPANY,
+	PASTCOMPANY2,
+	PASTCOMPANY3,
+	CURRENTJOB,
+	CURRENTJOB2,
+	CURRENTJOB3,
+	LASTJOB,
+	PASTJOB2,
+	PASTJOB3
+) as
+select PROFILELINK,
+COMPANY1,
+POSITION_SCOPE,
+CURRENTCOMPANY2,
+CURRENTCOMPANY3,
+lastjob_company,
+pastcompany2,
+pastcompany3,
+CURRENTJOB,
+CURRENTJOB2,
+CURRENTJOB3,
+LASTJOB,
+pastjob2,
+pastjob3
+from "LINK"."PUBLIC"."LINKEDIN"
+WHERE LASTJOB_COMPANY not like '%Part-time%'
+or   LASTJOB_COMPANY  not like '%PART-TIME%'
+or   LASTJOB_COMPANY  not like'%part-time%'
+or   LASTJOB_COMPANY  not like '%Part-Time%';
+
+-----------------------------------------------------------------------------------------
+view 2
+
+create or replace view LINK.PUBLIC.JPB_TYPES2(
+	PROFILELINK1,
+	POSITION,
+	CURRENTJOB,
+	PROFILELINK2,
+	POSITION2,
+	CURRENTJOB2,
+	PROFILELINK3,
+	POSITION3,
+	CURRENTJOB3,
+	PROFILELINK4,
+	LAST_POSITION,
+	LASTJOB,
+	PROFILELINK5,
+	LAST_POSITION2,
+	PASTJOB2,
+	PROFILELINK6,
+	LAST_POSITION3,
+	PASTJOB3
+) as 
+
+select a.PROFILELINK as "a.PROFILELINK",
+POSITION,
+CURRENTJOB,
+b.PROFILELINK as "b.PROFILELINK",
+POSITION2,
+CURRENTJOB2,
+c.PROFILELINK as "c.PROFILELINK",
+POSITION3,
+CURRENTJOB3,
+d.PROFILELINK as "d.PROFILELINK",
+LAST_POSITION,
+LASTJOB,
+e.PROFILELINK as "e.PROFILELINK",
+LAST_POSITION2,
+PASTJOB2,
+f.PROFILELINK as "f.PROFILELINK",
+LAST_POSITION3,
+PASTJOB3
+
+from
+(select PROFILELINK, CURRENTJOB, COMPANY1, POSITION_SCOPE, replace (POSITION_SCOPE, POSITION_SCOPE, 'Full Time') as POSITION
+
+from "LINK"."PUBLIC"."Job_Types"
+WHERE COMPANY1 not like '%null%'
+and   COMPANY1 not like '%Null%'
+and   COMPANY1 not like '%NULL%'
+and   COMPANY1 not like '%NULL%'
+and   POSITION_SCOPE not like '%Part-time%'
+) a
+
+full join
+
+(select PROFILELINK, CURRENTJOB2, CURRENTCOMPANY2, replace (CURRENTCOMPANY2, CURRENTCOMPANY2, 'Full Time') as POSITION2
+from "LINK"."PUBLIC"."Job_Types"
+WHERE CURRENTJOB2	 not like '%null%'
+and   CURRENTJOB2	 not like '%Null%'
+and   CURRENTJOB2	 not like '%NULL%'
+and   CURRENTJOB2	 not like '%NULL%'
+and   CURRENTCOMPANY2 not like '%Part-time%' ) b
+
+on a.PROFILELINK=b.PROFILELINK
+
+full join
+
+
+(select PROFILELINK, CURRENTJOB3, CURRENTCOMPANY3, replace (CURRENTCOMPANY3, CURRENTCOMPANY3, 'Full Time') as POSITION3
+from "LINK"."PUBLIC"."Job_Types"
+WHERE CURRENTJOB3	 not like '%null%'
+and   CURRENTJOB3	 not like '%Null%'
+and   CURRENTJOB3	 not like '%NULL%'
+and   CURRENTJOB3	 not like '%NULL%'
+and   CURRENTCOMPANY3 not like '%Part-time%') c
+
+on a.PROFILELINK=c.PROFILELINK
+
+full join
+
+(select PROFILELINK, LASTJOB, LASTJOB_COMPANY	, replace (LASTJOB_COMPANY	, LASTJOB_COMPANY	, 'Full Time') as last_POSITION
+from "LINK"."PUBLIC"."Job_Types"
+WHERE LASTJOB	 not like '%null%'
+and   LASTJOB	 not like '%Null%'
+and   LASTJOB	 not like '%NULL%'
+and   LASTJOB	 not like '%NULL%'
+and   LASTJOB_COMPANY	 not like '%Part-time%') d
+
+on a.PROFILELINK=d.PROFILELINK
+
+full join 
+
+(select PROFILELINK, PASTJOB2, PASTCOMPANY2		, replace (PASTCOMPANY2		, PASTCOMPANY2		, 'Full Time') as last_POSITION2
+from "LINK"."PUBLIC"."Job_Types"
+WHERE PASTJOB2	 not like '%null%'
+and   PASTJOB2	 not like '%Null%'
+and   PASTJOB2	 not like '%NULL%'
+and   PASTJOB2	 not like '%NULL%'
+and   PASTCOMPANY2		 not like '%Part-time%') e
+
+on a.PROFILELINK=e.PROFILELINK
+
+full join 
+
+(select PROFILELINK, PASTJOB3, PASTCOMPANY3		, replace (PASTCOMPANY3		, PASTCOMPANY3		, 'Full Time') as last_POSITION3
+from "LINK"."PUBLIC"."Job_Types"
+WHERE PASTJOB3	 not like '%null%'
+and   PASTJOB3	 not like '%Null%'
+and   PASTJOB3	 not like '%NULL%'
+and   PASTJOB3	 not like '%NULL%'
+and   PASTCOMPANY3		 not like '%Part-time%') f
+
+on a.PROFILELINK=f.PROFILELINK
+
+;
+
+-----------------------------------------------------------------------------------------
+view 3
+
+create or replace view LINK.PUBLIC.ALL_POSITIONS_NUMBER(
+	FULL_TIME1,
+	FULL_TIME2,
+	FULL_TIME3,
+	FULL_TIME4,
+	FULL_TIME5,
+	FULL_TIME6
+) as select 
+count(a.POSITION) as Full_Time1,
+count(b.POSITION2) as Full_Time2,
+count(c.POSITION3) as Full_Time3,
+count(d.LAST_POSITION	) as Full_Time4,
+count(e.LAST_POSITION2) as Full_Time5,
+count(f.LAST_POSITION3) as Full_Time6
+from 
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) a
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+CURRENTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) b
+on a.PROFILELINK1=b.PROFILELINK2
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE  CURRENTJOB3	LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) c
+on a.PROFILELINK1=c.PROFILELINK3
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+ LASTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) d
+on a.PROFILELINK1=d.PROFILELINK4
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+ PASTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) e
+on a.PROFILELINK1=e.PROFILELINK5
+
+full join
+
+(select *
+from "LINK"."PUBLIC"."JPB_TYPES2"
+WHERE 
+ PASTJOB3 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+) f
+
+on a.PROFILELINK1=f.PROFILELINK6
+
+
+-----------------------------------------------------------------------------------------
+view 4
+
+create or replace view LINK.PUBLIC."Full_Time_Analyst_Total"(
+	TOTAL
+) as
+select sum (
+Full_Time1 + Full_Time2 + Full_Time3 + Full_Time4 + Full_Time5 + Full_Time6
+) as Total
+from
+"LINK"."PUBLIC"."ALL_POSITIONS_NUMBER";
+
+-----------------------------------------------------------------------------------------
+view 5
+
+create or replace view LINK.PUBLIC."Part_Time_Analyst_Total"(
+	TOTAL
+) as
+select count(*) as Total
+from (
+select profilelink, position_scope,currentjob
+from  "LINK"."PUBLIC"."linkedin"
+where  position_scope  like '%Part-time%' and CURRENTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
+union
+  
+select profilelink,CURRENTCOMPANY2
+,currentjob2
+from  "LINK"."PUBLIC"."linkedin"
+where  CURRENTCOMPANY2
+  like '%Part-time%' and CURRENTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
+union
+  
+select profilelink,CURRENTCOMPANY3
+,currentjob3
+from  "LINK"."PUBLIC"."linkedin"
+where  CURRENTCOMPANY3
+  like '%Part-time%' and CURRENTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
+union
+  
+select profilelink,lastjob,lastjob_company
+from "LINK"."PUBLIC"."linkedin"
+where lastjob_company like '%Part-time%' and lastjob like any ('%Analyst%','%analyst','%ANALYST%')
+union 
+select profilelink,pastjob2,pastcompany2
+from "LINK"."PUBLIC"."linkedin"
+where pastcompany2 like '%Part-time%' and pastjob2 like any ('%Analyst%','%analyst','%ANALYST%')
+union
+select profilelink,pastjob3,pastcompany3
+from "LINK"."PUBLIC"."linkedin"
+where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analyst','%ANALYST%')
+)
+;
+
+-----------------------------------------------------------------------------------------
+View 6
+
+create or replace view LINK.PUBLIC."Part&Full_Time_Analyst_Total"(
+	JOB_TYPE,
+	TOTAL
+) as
+
+
+
+
+select case when Total = (select TOTAL from "LINK"."PUBLIC"."Part_Time_Analyst_Total") then 'Part Time'
+            when Total = (select TOTAL from "LINK"."PUBLIC"."Full_Time_Analyst_Total") then 'Full Time'
+            end as Job_Type,
+            Total
+from 
+(
+select Total
+from 
+"LINK"."PUBLIC"."Part_Time_Analyst_Total" 
+union
+select Total
+from
+"LINK"."PUBLIC"."Full_Time_Analyst_Total" 
+  );
+
+
 ### 6) Bussiness Question - What is the Percentage of experienced Military veterans?
 ```sql
 view 1
@@ -1505,9 +1506,4 @@ OR CURRENTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITA
 OR LASTJOB_COMPANY LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND  LASTJOB LIKE ('%Analyst%')
 OR PASTCOMPANY2 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB2 LIKE ('%Analyst%')
 OR PASTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB3 LIKE ('%Analyst%');
-```
-
-### 7)
-```sql
-
 ```
