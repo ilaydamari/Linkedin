@@ -1477,7 +1477,7 @@ select Total
 from
 "LINK"."PUBLIC"."Full_Time_Analyst_Total" 
   );
-
+```
 
 ### 6) Bussiness Question - What is the Percentage of experienced Military veterans?
 ```sql
