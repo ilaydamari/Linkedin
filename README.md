@@ -8,11 +8,24 @@ All the data in this project is real information from profiles of Data Analysts 
 The dataset represents 679 real Data Analyst profiles in Israel witch scraped with c++ scraping tool during Jun 2022 - May 2022.
 
 The project consists :
-Business questions (in an Excel spreadsheet),
+1) Project Overview & Explanation - PDF
+2) Business questions - Excel
 SQL queries (Views created on Snowflake Data Warehouse),
 Power BI dashboards, and a presentation,
 Presenta
-
+Characterization of Business Questions.xlsx
+Add files via upload
+3 days ago
+Main Table - CSV.xlsx
+Add files via upload
+3 days ago
+Project Dashboard - Final Presentaition.pbix
+Add files via upload
+3 days ago
+Project Dashboard - PDF.pptx
+Add files via upload
+3 days ago
+.pdf
 
 ## Project Levels
 
