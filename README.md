@@ -11,7 +11,7 @@ The project consists :
 1) Project Overview & Explanation - PDF
 2) Raw Data - CSV
 3) Business Questions - Excel 
-4) Conclusions & Visualization - Power BI Dashboard + PDF
+4) Conclusions & Visualization - Power BI Dashboard + Online
 5) SQL queries - divided to Views (Snowflake Datawarehouse) - at the bottom of this document.
 
 ## The team
