@@ -14,6 +14,13 @@ The project consists :
 4) Conclusions & Visualization - Power BI Dashboard + PDF
 5) SQL queries - divided to Views (Snowflake Datawarehouse) - at the bottom of this document.
 
+## The team
+Team leader: Ilay Damari
+Team members: Ido Kahlon
+		Ayelet Biton
+		Nofar Maymon
+
+
 
 ## Project Levels
 
