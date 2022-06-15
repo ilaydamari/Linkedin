@@ -2,6 +2,14 @@
 bla bla
 
 
+## Project Levels
+
+|Level |Explnation|
+|------|----------|
+|Data Scraping|Download C++ Program to do Scraping....|
+
+
+
 ## SQL Queries
 ### 1) Bussiness Question - Degree vs. Course, Which Path will Increase your Chances to become data analyst?
 
