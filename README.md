@@ -19,11 +19,11 @@ Team leader : Ilay Damari https://www.linkedin.com/in/ilay-damari/
 
 Team members :
 
+Nofar Hakmon https://www.linkedin.com/in/nofar-hakmon/
+
 Ido Kahlon https://www.linkedin.com/in/ido-kahlon/
 
 Ayelet Biton https://www.linkedin.com/in/ayelet-biton-8779b01b9/
-
-Nofar Hakmon https://www.linkedin.com/in/nofar-hakmon/
 
 
 
