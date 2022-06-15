@@ -31,7 +31,7 @@ The project consists :
 Note : Becuase of the raw data from the scraping tool, most of the questions contain more Views build one on another to clean and preper the data.
        Each View seperated with doted line (------)
        
-### 1) Bussiness Question - Degree vs. Course, Which Path will Increase your Chances to become data analyst?
+### 1) Bussiness Question - Degree vs. Course, Which path will Increase your chances to become Data Analyst?
 ```sql
 view 1
 
@@ -325,7 +325,7 @@ and PART1_SCHOOL not like '%Academic%'
 and EDUCATION not like '%null%';
 ```
 
-### 2) Bussiness Question - In What Areas do Most Analysts Work at?
+### 2) Bussiness Question - In what areas do most Analysts work at?
 ```sql
 View 1
 create or replace view LINK.PUBLIC.LOCATIONS(
