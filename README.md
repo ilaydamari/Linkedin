@@ -15,7 +15,9 @@ The project consists :
 5) SQL queries - divided to Views (Snowflake Datawarehouse) - at the bottom of this document.
 
 ## The team
+
 Team leader: Ilay Damari https://www.linkedin.com/in/ilay-damari/
+
 Team members: Ido Kahlon https://www.linkedin.com/in/ido-kahlon/
 		Ayelet Biton https://www.linkedin.com/in/ayelet-biton-8779b01b9/
 		Nofar Hakmon https://www.linkedin.com/in/nofar-hakmon/
