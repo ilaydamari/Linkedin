@@ -33,20 +33,20 @@ Note : Becuase of the raw data from the scraping tool, most of the questions con
        
 ### 1) Bussiness Question - Degree vs. Course, Which path will Increase your chances to become Data Analyst?
 ```sql
-view 1
+"view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
-	PROFILELINK,
-	FIRSTNAME,
-	LASTNAME,
-	CURRENTJOB,
-	JOBYEARS,
-	DURATION,
-	EDUCATION,
-	DEGREE,
-	CERTIFICATIONS,
-	COURSES,
-	AWARDS
+        PROFILELINK,
+        FIRSTNAME,
+        LASTNAME,
+        CURRENTJOB,
+        JOBYEARS,
+        DURATION,
+        EDUCATION,
+        DEGREE,
+        CERTIFICATIONS,
+        COURSES,
+        AWARDS
 ) as
 select PROFILELINK,FIRSTNAME,LASTNAME, CURRENTJOB,JOBYEARS, DURATION,EDUCATION,DEGREE, CERTIFICATIONS,
 COURSES, AWARDS
@@ -54,63 +54,63 @@ from
 (
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
  
 union
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 union
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 
 union
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where LASTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
-union	
+union        
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where PASTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 union
-	
+        
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where PASTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 )
 ;
 
 -----------------------------------------------------------------------------------------
-view 2
+view 
 
 create or replace view LINK.PUBLIC.EDUCATION_PARTS(
-	EDUCATION,
-	PART1_EDUC,
-	PART1_SCHOOL,
-	PART1_SESSION,
-	PART2_EDUC,
-	PART2_SCHOOL,
-	PART2_SESSION,
-	PART3_EDUC,
-	PART3_SCHOOL,
-	PART3_SESSION,
-	PART4_EDUC,
-	PART4_SCHOOL,
-	PART4_SESSION,
-	PART5_EDUC,
-	PART5_SCHOOL,
-	PART5_SESSION
+        EDUCATION,
+        PART1_EDUC,
+        PART1_SCHOOL,
+        PART1_SESSION,
+        PART2_EDUC,
+        PART2_SCHOOL,
+        PART2_SESSION,
+        PART3_EDUC,
+        PART3_SCHOOL,
+        PART3_SESSION,
+        PART4_EDUC,
+        PART4_SCHOOL,
+        PART4_SESSION,
+        PART5_EDUC,
+        PART5_SCHOOL,
+        PART5_SESSION
 ) as select qq.education,
 
 replace(replace(split_part((part_1), 'School:{',1),'[ Degree:{ ',''),' }', '') part1_educ,
@@ -148,35 +148,35 @@ split_part((EDUCATION), '][',4) part_4,
 split_part((EDUCATION), '][',5) part_5
  
  
-from "LINK"."PUBLIC"."EDUCATION"
+from ""LINK"".""PUBLIC"".""EDUCATION""
 ) qq
 
 ;
 
 -----------------------------------------------------------------------------------------
-view 3
+view 
 
 create or replace view LINK.PUBLIC.EDUCATION_MAX(
-	PROFILELINK,
-	EDUCATION,
-	PART1_EDUC,
-	PART1_SCHOOL,
-	MAX_SESSION
+        PROFILELINK,
+        EDUCATION,
+        PART1_EDUC,
+        PART1_SCHOOL,
+        MAX_SESSION
 ) as
-select distinct PROFILELINK, a.EDUCATION	, PART1_EDUC,PART1_SCHOOL	,max(PART1_SESSION) as max_session	 
+select distinct PROFILELINK, a.EDUCATION        , PART1_EDUC,PART1_SCHOOL        ,max(PART1_SESSION) as max_session         
 from
 
-(select EDUCATION	, PART1_EDUC,PART1_SCHOOL	,PART1_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+(select EDUCATION        , PART1_EDUC,PART1_SCHOOL        ,PART1_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART2_EDUC,PART2_SCHOOL	,PART2_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART2_EDUC,PART2_SCHOOL        ,PART2_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART3_EDUC,PART3_SCHOOL	,PART3_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART3_EDUC,PART3_SCHOOL        ,PART3_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART4_EDUC,PART4_SCHOOL	,PART4_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART4_EDUC,PART4_SCHOOL        ,PART4_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
 
-select EDUCATION	, PART5_EDUC,PART5_SCHOOL	,PART5_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS") a
-join  "LINK"."PUBLIC"."linkedin" b
+select EDUCATION        , PART5_EDUC,PART5_SCHOOL        ,PART5_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS"") a
+join  ""LINK"".""PUBLIC"".""linkedin"" b
 on a.EDUCATION=b.EDUCATION
 
 where not (PART1_EDUC is null and PART1_SCHOOL is null and PART1_SESSION is null)
@@ -187,29 +187,30 @@ group by 1,2,3,4
 order by 1;
 
 -----------------------------------------------------------------------------------------
-view 4
+
+view 
 
 create or replace view LINK.PUBLIC.EDUCATION_MAX2(
-	PROFILELINK,
-	EDUCATION,
-	PART1_EDUC,
-	PART1_SCHOOL,
-	MAX_SESSION
+        PROFILELINK,
+        EDUCATION,
+        PART1_EDUC,
+        PART1_SCHOOL,
+        MAX_SESSION
 ) as
-select distinct PROFILELINK, a.EDUCATION	, PART1_EDUC,PART1_SCHOOL	,max(PART1_SESSION) as max_session	 
+select distinct PROFILELINK, a.EDUCATION        , PART1_EDUC,PART1_SCHOOL        ,max(PART1_SESSION) as max_session         
 from
 
-(select EDUCATION	, PART1_EDUC,PART1_SCHOOL	,PART1_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+(select EDUCATION        , PART1_EDUC,PART1_SCHOOL        ,PART1_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART2_EDUC,PART2_SCHOOL	,PART2_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART2_EDUC,PART2_SCHOOL        ,PART2_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART3_EDUC,PART3_SCHOOL	,PART3_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART3_EDUC,PART3_SCHOOL        ,PART3_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART4_EDUC,PART4_SCHOOL	,PART4_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART4_EDUC,PART4_SCHOOL        ,PART4_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
 
-select EDUCATION	, PART5_EDUC,PART5_SCHOOL	,PART5_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS") a
-join  "LINK"."PUBLIC"."linkedin" b
+select EDUCATION        , PART5_EDUC,PART5_SCHOOL        ,PART5_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS"") a
+join  ""LINK"".""PUBLIC"".""linkedin"" b
 on a.EDUCATION=b.EDUCATION
 
 where not (PART1_EDUC is null and PART1_SCHOOL is null and PART1_SESSION is null)
@@ -220,22 +221,22 @@ group by 1,2,3,4
 order by 1;
 
 -----------------------------------------------------------------------------------------
-view 5
+view
 
-create or replace view LINK.PUBLIC."People_Only_Course"(
-	PROFILELINK,
-	EDUCATION,
-	PART1_EDUC,
-	PART1_SCHOOL,
-	PEOPLE
+create or replace view LINK.PUBLIC.""People_Only_Course""(
+        PROFILELINK,
+        EDUCATION,
+        PART1_EDUC,
+        PART1_SCHOOL,
+        PEOPLE
 ) as
 select distinct PROFILELINK::string, EDUCATION, PART1_EDUC, PART1_SCHOOL, count (PROFILELINK) as People
-from "LINK"."PUBLIC"."EDUCATION_MAX2"
+from ""LINK"".""PUBLIC"".""EDUCATION_MAX2""
 where PROFILELINK not in ( 
   
   
 select distinct PROFILELINK
-from "LINK"."PUBLIC"."EDUCATION_MAX"
+from ""LINK"".""PUBLIC"".""EDUCATION_MAX""
 where PART1_SCHOOL not like '%Certific%'
                               and EDUCATION not like 'null'
                               and PART1_SCHOOL not like '%Elevation Academy%'
@@ -322,25 +323,25 @@ having PART1_SCHOOL not like '%univ%'
 and PART1_SCHOOL not like '%Univ%'
 and PART1_SCHOOL not like '%academic%'
 and PART1_SCHOOL not like '%Academic%'
-and EDUCATION not like '%null%';
+and EDUCATION not like '%null%';"
 ```
 
 ### 2) Bussiness Question - Wich Degree is the most common between Data Analysts?
 ```sql
-view 1
+"view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
-	PROFILELINK,
-	FIRSTNAME,
-	LASTNAME,
-	CURRENTJOB,
-	JOBYEARS,
-	DURATION,
-	EDUCATION,
-	DEGREE,
-	CERTIFICATIONS,
-	COURSES,
-	AWARDS
+        PROFILELINK,
+        FIRSTNAME,
+        LASTNAME,
+        CURRENTJOB,
+        JOBYEARS,
+        DURATION,
+        EDUCATION,
+        DEGREE,
+        CERTIFICATIONS,
+        COURSES,
+        AWARDS
 ) as
 select PROFILELINK,FIRSTNAME,LASTNAME, CURRENTJOB,JOBYEARS, DURATION,EDUCATION,DEGREE, CERTIFICATIONS,
 COURSES, AWARDS
@@ -348,38 +349,38 @@ from
 (
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
  
 union
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 union
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 
 union
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where LASTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
-union	
+union        
 
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where PASTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 union
-	
+        
 select *
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where PASTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 
 )
@@ -389,22 +390,22 @@ where PASTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 view 2
 
 create or replace view LINK.PUBLIC.EDUCATION_PARTS(
-	EDUCATION,
-	PART1_EDUC,
-	PART1_SCHOOL,
-	PART1_SESSION,
-	PART2_EDUC,
-	PART2_SCHOOL,
-	PART2_SESSION,
-	PART3_EDUC,
-	PART3_SCHOOL,
-	PART3_SESSION,
-	PART4_EDUC,
-	PART4_SCHOOL,
-	PART4_SESSION,
-	PART5_EDUC,
-	PART5_SCHOOL,
-	PART5_SESSION
+        EDUCATION,
+        PART1_EDUC,
+        PART1_SCHOOL,
+        PART1_SESSION,
+        PART2_EDUC,
+        PART2_SCHOOL,
+        PART2_SESSION,
+        PART3_EDUC,
+        PART3_SCHOOL,
+        PART3_SESSION,
+        PART4_EDUC,
+        PART4_SCHOOL,
+        PART4_SESSION,
+        PART5_EDUC,
+        PART5_SCHOOL,
+        PART5_SESSION
 ) as select qq.education,
 
 replace(replace(split_part((part_1), 'School:{',1),'[ Degree:{ ',''),' }', '') part1_educ,
@@ -442,7 +443,7 @@ split_part((EDUCATION), '][',4) part_4,
 split_part((EDUCATION), '][',5) part_5
  
  
-from "LINK"."PUBLIC"."EDUCATION"
+from ""LINK"".""PUBLIC"".""EDUCATION""
 ) qq
 
 ;
@@ -451,26 +452,26 @@ from "LINK"."PUBLIC"."EDUCATION"
 view 3
 
 create or replace view LINK.PUBLIC.EDUCATION_MAX(
-	PROFILELINK,
-	EDUCATION,
-	PART1_EDUC,
-	PART1_SCHOOL,
-	MAX_SESSION
+        PROFILELINK,
+        EDUCATION,
+        PART1_EDUC,
+        PART1_SCHOOL,
+        MAX_SESSION
 ) as
-select distinct PROFILELINK, a.EDUCATION	, PART1_EDUC,PART1_SCHOOL	,max(PART1_SESSION) as max_session	 
+select distinct PROFILELINK, a.EDUCATION        , PART1_EDUC,PART1_SCHOOL        ,max(PART1_SESSION) as max_session         
 from
 
-(select EDUCATION	, PART1_EDUC,PART1_SCHOOL	,PART1_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+(select EDUCATION        , PART1_EDUC,PART1_SCHOOL        ,PART1_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART2_EDUC,PART2_SCHOOL	,PART2_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART2_EDUC,PART2_SCHOOL        ,PART2_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART3_EDUC,PART3_SCHOOL	,PART3_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART3_EDUC,PART3_SCHOOL        ,PART3_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
-select EDUCATION	, PART4_EDUC,PART4_SCHOOL	,PART4_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS"
+select EDUCATION        , PART4_EDUC,PART4_SCHOOL        ,PART4_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS""
 union
 
-select EDUCATION	, PART5_EDUC,PART5_SCHOOL	,PART5_SESSION	 	from "LINK"."PUBLIC"."EDUCATION_PARTS") a
-join  "LINK"."PUBLIC"."linkedin" b
+select EDUCATION        , PART5_EDUC,PART5_SCHOOL        ,PART5_SESSION                 from ""LINK"".""PUBLIC"".""EDUCATION_PARTS"") a
+join  ""LINK"".""PUBLIC"".""linkedin"" b
 on a.EDUCATION=b.EDUCATION
 
 where not (PART1_EDUC is null and PART1_SCHOOL is null and PART1_SESSION is null)
@@ -483,10 +484,10 @@ order by 1;
 -----------------------------------------------------------------------------------------
 view 4
 
-create or replace view LINK.PUBLIC."Sum_of_Education_Parts"(
-	PROFILELINK,
-	EDUCATION,
-	PEOPLE
+create or replace view LINK.PUBLIC.""Sum_of_Education_Parts""(
+        PROFILELINK,
+        EDUCATION,
+        PEOPLE
 ) as
 select profilelink,
    case when PART1_EDUC like '%Economics%' or PART1_EDUC like '%economics%' or PART1_EDUC like '%Economy%' or PART1_EDUC like '%Finance%'  or PART1_EDUC like '%economic%' or PART1_EDUC like '%Financial%'
@@ -557,7 +558,7 @@ else PART1_EDUC
      
      count (distinct profilelink) as People
      
-from "LINK"."PUBLIC"."EDUCATION_MAX"
+from ""LINK"".""PUBLIC"".""EDUCATION_MAX""
 group by profilelink,
    case when PART1_EDUC like '%Economics%' or PART1_EDUC like '%economics%' or PART1_EDUC like '%Economy%' or PART1_EDUC like '%Finance%'  or PART1_EDUC like '%economic%' or PART1_EDUC like '%Financial%'
    or PART1_EDUC like '%finance%'  
@@ -631,10 +632,10 @@ group by profilelink,
 view 5
 
 create or replace view LINK.PUBLIC.SUM_OF_EDUCATION(
-	PROFILELINK,
-	EDUCATION,
-	EDUCATION_TYPE,
-	PEOPLE
+        PROFILELINK,
+        EDUCATION,
+        EDUCATION_TYPE,
+        PEOPLE
 ) as select
 PROFILELINK ,
 EDUCATION,
@@ -686,19 +687,19 @@ case when education like 'Course' then 'Course'
      else 'Unknown'
      end as Education_Type,
 PEOPLE
-from "LINK"."PUBLIC"."Sum_of_Education_Parts";
+from ""LINK"".""PUBLIC"".""Sum_of_Education_Parts"";"
 ```
 
 ### 3) Bussiness Question - In what areas do most Analysts work at?
 ```sql
-View 1
+"View 1
 create or replace view LINK.PUBLIC.LOCATIONS(
-	PROFILELINK,
-	LOCATION,
-	CURRENTJOB,
-	LOCATIONS
+        PROFILELINK,
+        LOCATION,
+        CURRENTJOB,
+        LOCATIONS
 ) as select profilelink, Location, currentjob, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob not like '%null%'
 and Location not like '%null%'
 and (currentjob like '%Analyst%' 
@@ -710,7 +711,7 @@ group by profilelink, Location, currentjob
 union
 
 select profilelink, CurrentLocation2, currentjob2, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob2 not like '%null%'
 and CurrentLocation2 not like '%null%'
 and (currentjob2 like '%Analyst%' 
@@ -722,7 +723,7 @@ group by profilelink, CurrentLocation2, currentjob2
 union
 
 select profilelink, CurrentLocation3, currentjob3, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where currentjob3 not like '%null%'
 and CurrentLocation3 not like '%null%'
 and (currentjob3 like '%Analyst%' 
@@ -734,7 +735,7 @@ group by profilelink, CurrentLocation3, currentjob3
 union
 
 select profilelink, LASTJOBLOCATION1, LASTJOB, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where LASTJOB not like '%null%'
 and LASTJOBLOCATION1 not like '%null%'
 and (LASTJOB like '%Analyst%' 
@@ -743,10 +744,10 @@ or LASTJOB like '%data%'
 or LASTJOB like '%Data%')
 group by profilelink, LASTJOBLOCATION1, LASTJOB
 
-union	
+union        
 
 select profilelink, PASTLOCATION2, PASTJOB2, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where PASTJOB2 not like '%null%'
 and PASTLOCATION2 not like '%null%'
 and (PASTJOB2 like '%Analyst%' 
@@ -756,9 +757,9 @@ or PASTJOB2 like '%Data%')
 group by profilelink, PASTLOCATION2, PASTJOB2
 
 union
-	
+        
 select profilelink, PASTLOCATION3, PASTJOB3, count(profilelink) as locations
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 where PASTJOB3 not like '%null%'
 and PASTLOCATION3 not like '%null%'
 and (PASTJOB3 like '%Analyst%' 
@@ -770,15 +771,15 @@ group by profilelink, PASTLOCATION3, PASTJOB3
 -----------------------------------------------------------------------------------------
 View 2
 
-create or replace view LINK.PUBLIC."LOCATIONS_parts"(
-	PROFILELINK,
-	LOCATION,
-	PART_1,
-	PART_2,
-	PART_3,
-	PART_4,
-	CURRENTJOB,
-	LOCATIONS
+create or replace view LINK.PUBLIC.""LOCATIONS_parts""(
+        PROFILELINK,
+        LOCATION,
+        PART_1,
+        PART_2,
+        PART_3,
+        PART_4,
+        CURRENTJOB,
+        LOCATIONS
 ) as select profilelink, LOCATION,
 split_part((LOCATION), ';',1):: variant part_1,
 split_part((LOCATION), ';',2):: variant part_2,
@@ -788,29 +789,29 @@ CURRENTJOB,
 LOCATIONS
 
 from 
-"LINK"."PUBLIC"."LOCATIONS"
+""LINK"".""PUBLIC"".""LOCATIONS""
 ;
 
 -----------------------------------------------------------------------------------------
 View 3
 
-create or replace view LINK.PUBLIC."LOCATIONS_Total"(
-	PROFILELINK,
-	CITY,
-	LOCATION_NUM
+create or replace view LINK.PUBLIC.""LOCATIONS_Total""(
+        PROFILELINK,
+        CITY,
+        LOCATION_NUM
 ) as 
-select profilelink, replace (PART_1, '"', '') as City, sum(LOCATIONS) as Location_Num
-from "LINK"."PUBLIC"."LOCATIONS_parts"
+select profilelink, replace (PART_1, '""', '') as City, sum(LOCATIONS) as Location_Num
+from ""LINK"".""PUBLIC"".""LOCATIONS_parts""
 group by 1,2;
 
 -----------------------------------------------------------------------------------------
 View 4
 
-create or replace view LINK.PUBLIC."Region_City"(
-	PROFILELINK,
-	CITY,
-	REGION,
-	NUMBER
+create or replace view LINK.PUBLIC.""Region_City""(
+        PROFILELINK,
+        CITY,
+        REGION,
+        NUMBER
 ) as
 select profilelink, City,
      case when city like any ('%Tel Aviv%', '%Herzliya%', '%Ramat Gan%', '%Petah Tikva%', '%Givatayim%', '%Bnei Brak%', '%Rishon%', '%Lod%', '%ananna%', 'Holon','%Reẖovot%', '%Haדharon%',
@@ -862,31 +863,31 @@ select case when city like any ('%Tel Aviv%', '%tel aviv%', 'Tel-Aviv') then 'Te
             end City,
   
 profilelink, LOCATION_NUM
-  from "LINK"."PUBLIC"."LOCATIONS_Total"
+  from ""LINK"".""PUBLIC"".""LOCATIONS_Total""
 )
 group by 
 1,2, 3
-order by Number desc;
+order by Number desc;"
 ```
 ### 4) Bussiness Question - What is the Percentage of Analysts that Work Part Time vs Full Time?
 ```sql
-view 1 
+"view 1 
 
-create or replace view LINK.PUBLIC."Job_Types"(
-	PROFILELINK,
-	COMPANY1,
-	POSITION_SCOPE,
-	CURRENTCOMPANY2,
-	CURRENTCOMPANY3,
-	LASTJOB_COMPANY,
-	PASTCOMPANY2,
-	PASTCOMPANY3,
-	CURRENTJOB,
-	CURRENTJOB2,
-	CURRENTJOB3,
-	LASTJOB,
-	PASTJOB2,
-	PASTJOB3
+create or replace view LINK.PUBLIC.""Job_Types""(
+        PROFILELINK,
+        COMPANY1,
+        POSITION_SCOPE,
+        CURRENTCOMPANY2,
+        CURRENTCOMPANY3,
+        LASTJOB_COMPANY,
+        PASTCOMPANY2,
+        PASTCOMPANY3,
+        CURRENTJOB,
+        CURRENTJOB2,
+        CURRENTJOB3,
+        LASTJOB,
+        PASTJOB2,
+        PASTJOB3
 ) as
 select PROFILELINK,
 COMPANY1,
@@ -902,7 +903,7 @@ CURRENTJOB3,
 LASTJOB,
 pastjob2,
 pastjob3
-from "LINK"."PUBLIC"."LINKEDIN"
+from ""LINK"".""PUBLIC"".""LINKEDIN""
 WHERE LASTJOB_COMPANY not like '%Part-time%'
 or   LASTJOB_COMPANY  not like '%PART-TIME%'
 or   LASTJOB_COMPANY  not like'%part-time%'
@@ -912,49 +913,49 @@ or   LASTJOB_COMPANY  not like '%Part-Time%';
 view 2
 
 create or replace view LINK.PUBLIC.JPB_TYPES2(
-	PROFILELINK1,
-	POSITION,
-	CURRENTJOB,
-	PROFILELINK2,
-	POSITION2,
-	CURRENTJOB2,
-	PROFILELINK3,
-	POSITION3,
-	CURRENTJOB3,
-	PROFILELINK4,
-	LAST_POSITION,
-	LASTJOB,
-	PROFILELINK5,
-	LAST_POSITION2,
-	PASTJOB2,
-	PROFILELINK6,
-	LAST_POSITION3,
-	PASTJOB3
+        PROFILELINK1,
+        POSITION,
+        CURRENTJOB,
+        PROFILELINK2,
+        POSITION2,
+        CURRENTJOB2,
+        PROFILELINK3,
+        POSITION3,
+        CURRENTJOB3,
+        PROFILELINK4,
+        LAST_POSITION,
+        LASTJOB,
+        PROFILELINK5,
+        LAST_POSITION2,
+        PASTJOB2,
+        PROFILELINK6,
+        LAST_POSITION3,
+        PASTJOB3
 ) as 
 
-select a.PROFILELINK as "a.PROFILELINK",
+select a.PROFILELINK as ""a.PROFILELINK"",
 POSITION,
 CURRENTJOB,
-b.PROFILELINK as "b.PROFILELINK",
+b.PROFILELINK as ""b.PROFILELINK"",
 POSITION2,
 CURRENTJOB2,
-c.PROFILELINK as "c.PROFILELINK",
+c.PROFILELINK as ""c.PROFILELINK"",
 POSITION3,
 CURRENTJOB3,
-d.PROFILELINK as "d.PROFILELINK",
+d.PROFILELINK as ""d.PROFILELINK"",
 LAST_POSITION,
 LASTJOB,
-e.PROFILELINK as "e.PROFILELINK",
+e.PROFILELINK as ""e.PROFILELINK"",
 LAST_POSITION2,
 PASTJOB2,
-f.PROFILELINK as "f.PROFILELINK",
+f.PROFILELINK as ""f.PROFILELINK"",
 LAST_POSITION3,
 PASTJOB3
 
 from
 (select PROFILELINK, CURRENTJOB, COMPANY1, POSITION_SCOPE, replace (POSITION_SCOPE, POSITION_SCOPE, 'Full Time') as POSITION
 
-from "LINK"."PUBLIC"."Job_Types"
+from ""LINK"".""PUBLIC"".""Job_Types""
 WHERE COMPANY1 not like '%null%'
 and   COMPANY1 not like '%Null%'
 and   COMPANY1 not like '%NULL%'
@@ -965,11 +966,11 @@ and   POSITION_SCOPE not like '%Part-time%'
 full join
 
 (select PROFILELINK, CURRENTJOB2, CURRENTCOMPANY2, replace (CURRENTCOMPANY2, CURRENTCOMPANY2, 'Full Time') as POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB2	 not like '%null%'
-and   CURRENTJOB2	 not like '%Null%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTJOB2	 not like '%NULL%'
+from ""LINK"".""PUBLIC"".""Job_Types""
+WHERE CURRENTJOB2         not like '%null%'
+and   CURRENTJOB2         not like '%Null%'
+and   CURRENTJOB2         not like '%NULL%'
+and   CURRENTJOB2         not like '%NULL%'
 and   CURRENTCOMPANY2 not like '%Part-time%' ) b
 
 on a.PROFILELINK=b.PROFILELINK
@@ -978,48 +979,48 @@ full join
 
 
 (select PROFILELINK, CURRENTJOB3, CURRENTCOMPANY3, replace (CURRENTCOMPANY3, CURRENTCOMPANY3, 'Full Time') as POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB3	 not like '%null%'
-and   CURRENTJOB3	 not like '%Null%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTJOB3	 not like '%NULL%'
+from ""LINK"".""PUBLIC"".""Job_Types""
+WHERE CURRENTJOB3         not like '%null%'
+and   CURRENTJOB3         not like '%Null%'
+and   CURRENTJOB3         not like '%NULL%'
+and   CURRENTJOB3         not like '%NULL%'
 and   CURRENTCOMPANY3 not like '%Part-time%') c
 
 on a.PROFILELINK=c.PROFILELINK
 
 full join
 
-(select PROFILELINK, LASTJOB, LASTJOB_COMPANY	, replace (LASTJOB_COMPANY	, LASTJOB_COMPANY	, 'Full Time') as last_POSITION
-from "LINK"."PUBLIC"."Job_Types"
-WHERE LASTJOB	 not like '%null%'
-and   LASTJOB	 not like '%Null%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB_COMPANY	 not like '%Part-time%') d
+(select PROFILELINK, LASTJOB, LASTJOB_COMPANY        , replace (LASTJOB_COMPANY        , LASTJOB_COMPANY        , 'Full Time') as last_POSITION
+from ""LINK"".""PUBLIC"".""Job_Types""
+WHERE LASTJOB         not like '%null%'
+and   LASTJOB         not like '%Null%'
+and   LASTJOB         not like '%NULL%'
+and   LASTJOB         not like '%NULL%'
+and   LASTJOB_COMPANY         not like '%Part-time%') d
 
 on a.PROFILELINK=d.PROFILELINK
 
 full join 
 
-(select PROFILELINK, PASTJOB2, PASTCOMPANY2		, replace (PASTCOMPANY2		, PASTCOMPANY2		, 'Full Time') as last_POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB2	 not like '%null%'
-and   PASTJOB2	 not like '%Null%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTCOMPANY2		 not like '%Part-time%') e
+(select PROFILELINK, PASTJOB2, PASTCOMPANY2                , replace (PASTCOMPANY2                , PASTCOMPANY2                , 'Full Time') as last_POSITION2
+from ""LINK"".""PUBLIC"".""Job_Types""
+WHERE PASTJOB2         not like '%null%'
+and   PASTJOB2         not like '%Null%'
+and   PASTJOB2         not like '%NULL%'
+and   PASTJOB2         not like '%NULL%'
+and   PASTCOMPANY2                 not like '%Part-time%') e
 
 on a.PROFILELINK=e.PROFILELINK
 
 full join 
 
-(select PROFILELINK, PASTJOB3, PASTCOMPANY3		, replace (PASTCOMPANY3		, PASTCOMPANY3		, 'Full Time') as last_POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB3	 not like '%null%'
-and   PASTJOB3	 not like '%Null%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTCOMPANY3		 not like '%Part-time%') f
+(select PROFILELINK, PASTJOB3, PASTCOMPANY3                , replace (PASTCOMPANY3                , PASTCOMPANY3                , 'Full Time') as last_POSITION3
+from ""LINK"".""PUBLIC"".""Job_Types""
+WHERE PASTJOB3         not like '%null%'
+and   PASTJOB3         not like '%Null%'
+and   PASTJOB3         not like '%NULL%'
+and   PASTJOB3         not like '%NULL%'
+and   PASTCOMPANY3                 not like '%Part-time%') f
 
 on a.PROFILELINK=f.PROFILELINK
 
@@ -1029,22 +1030,22 @@ on a.PROFILELINK=f.PROFILELINK
 view 3
 
 create or replace view LINK.PUBLIC.ALL_POSITIONS_NUMBER(
-	FULL_TIME1,
-	FULL_TIME2,
-	FULL_TIME3,
-	FULL_TIME4,
-	FULL_TIME5,
-	FULL_TIME6
+        FULL_TIME1,
+        FULL_TIME2,
+        FULL_TIME3,
+        FULL_TIME4,
+        FULL_TIME5,
+        FULL_TIME6
 ) as select 
 count(a.POSITION) as Full_Time1,
 count(b.POSITION2) as Full_Time2,
 count(c.POSITION3) as Full_Time3,
-count(d.LAST_POSITION	) as Full_Time4,
+count(d.LAST_POSITION        ) as Full_Time4,
 count(e.LAST_POSITION2) as Full_Time5,
 count(f.LAST_POSITION3) as Full_Time6
 from 
 (select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
+from ""LINK"".""PUBLIC"".""JPB_TYPES2""
 WHERE 
 CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 ) a
@@ -1052,7 +1053,7 @@ CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 full join
 
 (select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
+from ""LINK"".""PUBLIC"".""JPB_TYPES2""
 WHERE 
 CURRENTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 ) b
@@ -1060,15 +1061,15 @@ on a.PROFILELINK1=b.PROFILELINK2
 full join
 
 (select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE  CURRENTJOB3	LIKE  any ('%Analyst%','%analyst','%ANALYST%')
+from ""LINK"".""PUBLIC"".""JPB_TYPES2""
+WHERE  CURRENTJOB3        LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 ) c
 on a.PROFILELINK1=c.PROFILELINK3
 
 full join
 
 (select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
+from ""LINK"".""PUBLIC"".""JPB_TYPES2""
 WHERE 
  LASTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 ) d
@@ -1077,7 +1078,7 @@ on a.PROFILELINK1=d.PROFILELINK4
 full join
 
 (select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
+from ""LINK"".""PUBLIC"".""JPB_TYPES2""
 WHERE 
  PASTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 ) e
@@ -1086,7 +1087,7 @@ on a.PROFILELINK1=e.PROFILELINK5
 full join
 
 (select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
+from ""LINK"".""PUBLIC"".""JPB_TYPES2""
 WHERE 
  PASTJOB3 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
 ) f
@@ -1097,52 +1098,52 @@ on a.PROFILELINK1=f.PROFILELINK6
 -----------------------------------------------------------------------------------------
 view 4
 
-create or replace view LINK.PUBLIC."Full_Time_Analyst_Total"(
-	TOTAL
+create or replace view LINK.PUBLIC.""Full_Time_Analyst_Total""(
+        TOTAL
 ) as
 select sum (
 Full_Time1 + Full_Time2 + Full_Time3 + Full_Time4 + Full_Time5 + Full_Time6
 ) as Total
 from
-"LINK"."PUBLIC"."ALL_POSITIONS_NUMBER";
+""LINK"".""PUBLIC"".""ALL_POSITIONS_NUMBER"";
 
 -----------------------------------------------------------------------------------------
 view 5
 
-create or replace view LINK.PUBLIC."Part_Time_Analyst_Total"(
-	TOTAL
+create or replace view LINK.PUBLIC.""Part_Time_Analyst_Total""(
+        TOTAL
 ) as
 select count(*) as Total
 from (
 select profilelink, position_scope,currentjob
-from  "LINK"."PUBLIC"."linkedin"
+from  ""LINK"".""PUBLIC"".""linkedin""
 where  position_scope  like '%Part-time%' and CURRENTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 union
   
 select profilelink,CURRENTCOMPANY2
 ,currentjob2
-from  "LINK"."PUBLIC"."linkedin"
+from  ""LINK"".""PUBLIC"".""linkedin""
 where  CURRENTCOMPANY2
   like '%Part-time%' and CURRENTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 union
   
 select profilelink,CURRENTCOMPANY3
 ,currentjob3
-from  "LINK"."PUBLIC"."linkedin"
+from  ""LINK"".""PUBLIC"".""linkedin""
 where  CURRENTCOMPANY3
   like '%Part-time%' and CURRENTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 union
   
 select profilelink,lastjob,lastjob_company
-from "LINK"."PUBLIC"."linkedin"
+from ""LINK"".""PUBLIC"".""linkedin""
 where lastjob_company like '%Part-time%' and lastjob like any ('%Analyst%','%analyst','%ANALYST%')
 union 
 select profilelink,pastjob2,pastcompany2
-from "LINK"."PUBLIC"."linkedin"
+from ""LINK"".""PUBLIC"".""linkedin""
 where pastcompany2 like '%Part-time%' and pastjob2 like any ('%Analyst%','%analyst','%ANALYST%')
 union
 select profilelink,pastjob3,pastcompany3
-from "LINK"."PUBLIC"."linkedin"
+from ""LINK"".""PUBLIC"".""linkedin""
 where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analyst','%ANALYST%')
 )
 ;
@@ -1150,353 +1151,430 @@ where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analy
 -----------------------------------------------------------------------------------------
 View 6
 
-create or replace view LINK.PUBLIC."Part&Full_Time_Analyst_Total"(
-	JOB_TYPE,
-	TOTAL
+create or replace view LINK.PUBLIC.""Part&Full_Time_Analyst_Total""(
+        JOB_TYPE,
+        TOTAL
 ) as
 
 
 
 
-select case when Total = (select TOTAL from "LINK"."PUBLIC"."Part_Time_Analyst_Total") then 'Part Time'
-            when Total = (select TOTAL from "LINK"."PUBLIC"."Full_Time_Analyst_Total") then 'Full Time'
+select case when Total = (select TOTAL from ""LINK"".""PUBLIC"".""Part_Time_Analyst_Total"") then 'Part Time'
+            when Total = (select TOTAL from ""LINK"".""PUBLIC"".""Full_Time_Analyst_Total"") then 'Full Time'
             end as Job_Type,
             Total
 from 
 (
 select Total
 from 
-"LINK"."PUBLIC"."Part_Time_Analyst_Total" 
+""LINK"".""PUBLIC"".""Part_Time_Analyst_Total"" 
 union
 select Total
 from
-"LINK"."PUBLIC"."Full_Time_Analyst_Total" 
-  );
+""LINK"".""PUBLIC"".""Full_Time_Analyst_Total"" 
+  );"
 ```
 ### 5) Bussiness Question - How Long it Will Take to be Senior Analyst/DS/DE
 ```sql
-view 1 
+"view 1
 
-create or replace view LINK.PUBLIC."Job_Types"(
-	PROFILELINK,
-	COMPANY1,
-	POSITION_SCOPE,
-	CURRENTCOMPANY2,
-	CURRENTCOMPANY3,
-	LASTJOB_COMPANY,
-	PASTCOMPANY2,
-	PASTCOMPANY3,
-	CURRENTJOB,
-	CURRENTJOB2,
-	CURRENTJOB3,
-	LASTJOB,
-	PASTJOB2,
-	PASTJOB3
-) as
-select PROFILELINK,
-COMPANY1,
-POSITION_SCOPE,
-CURRENTCOMPANY2,
-CURRENTCOMPANY3,
-lastjob_company,
-pastcompany2,
-pastcompany3,
-CURRENTJOB,
-CURRENTJOB2,
-CURRENTJOB3,
-LASTJOB,
-pastjob2,
-pastjob3
-from "LINK"."PUBLIC"."LINKEDIN"
-WHERE LASTJOB_COMPANY not like '%Part-time%'
-or   LASTJOB_COMPANY  not like '%PART-TIME%'
-or   LASTJOB_COMPANY  not like'%part-time%'
-or   LASTJOB_COMPANY  not like '%Part-Time%';
+create or replace view LINK.PUBLIC.DURATION_NEW(
+        PROFILELINK,
+        FIRSTNAME,
+        LASTNAME,
+        TAGLINETITLE,
+        CURRENTJOB,
+        COMPANY1,
+        POSITION_SCOPE,
+        JOBYEARS,
+        JOBDATE,
+        MONTH_NAME,
+        DURATION,
+        LOCATION,
+        CURRENTJOB2,
+        CURRENTCOMPANY2,
+        CURRENTJOBYEARS2,
+        CURRENTJOBDATE2,
+        MONTH_NAME2,
+        CURRENTDURATION2,
+        CURRENTLOCATION2,
+        CURRENTJOB3,
+        CURRENTCOMPANY3,
+        CURRENTJOBYEARS3,
+        CURRENTJOBDATE3,
+        MONTH_NAME3,
+        CURRENTDURATION3,
+        CURRENTLOCATION3,
+        LASTJOB,
+        LASTJOB_COMPANY,
+        LASTJOBYEARS1_BEGIN,
+        LASTJOBDATE1_BEGIN,
+        LASTMONTH_NAME1_BEGIN,
+        LASTJOBYEARS1_FINISH,
+        LASTJOBDATE1_FINISH,
+        LASTMONTH_NAME1_FINISH,
+        LASTJOBDURATION1,
+        LASTJOBLOCATION1,
+        PASTJOB2,
+        PASTCOMPANY2,
+        PASTJOBYEARS2_BEGIN,
+        PASTJOBDATE2_BEGIN,
+        PASTJOBMONTH_NAME2_BEGIN,
+        PASTJOBYEARS2_FINISH,
+        PASTJOBDATE2_FINISH,
+        PASTJOBMONTH_NAME2_FINISH,
+        PASTDURATION2,
+        PASTLOCATION2,
+        PASTJOB3,
+        PASTCOMPANY3,
+        PASTJOBYEARS3_BEGIN,
+        PASTJOBDATE3_BEGIN,
+        PASTJOBMONTH_NAME3_BEGIN,
+        PASTJOBYEARS3_FINISH,
+        PASTJOBDATE3_FINISH,
+        PASTJOBMONTH_NAME3_FINISH,
+        PASTDURATION3,
+        PASTLOCATION3,
+        CURRENTDATE
+) as SELECT    PROFILELINK,
+        FIRSTNAME,
+        LASTNAME,
+        TAGLINETITLE,
+        CURRENTJOB,
+        COMPANY1,
+        POSITION_SCOPE,
+        REPLACE(JOBYEARS,'- Present',''),
+    CONCAT (substr(JOBYEARS,5, 4 ),'-',left(JOBYEARS,3),'-','01'),
+    left(JOBYEARS,3),
+        DURATION,
+        LOCATION,
+        CURRENTJOB2,
+        CURRENTCOMPANY2,
+        REPLACE(CURRENTJOBYEARS2,'- Present',''),
+    CONCAT (substr(CURRENTJOBYEARS2,5, 4 ),'-',left(CURRENTJOBYEARS2,3),'-','01'),
+    left(CURRENTJOBYEARS2,3),
+        CURRENTDURATION2,
+        CURRENTLOCATION2,
+        CURRENTJOB3,
+        CURRENTCOMPANY3,
+        REPLACE(CURRENTJOBYEARS3,'- Present',''),
+    CONCAT (substr(CURRENTJOBYEARS3,5, 4 ),'-',left(CURRENTJOBYEARS3,3),'-','01'),
+    left(CURRENTJOBYEARS3,3),
+        CURRENTDURATION3,
+        CURRENTLOCATION3,
+        LASTJOB,
+        LASTJOB_COMPANY,
+        REPLACE(LASTJOBYEARS1_BEGIN,'- Present',''),
+    CONCAT (substr(LASTJOBYEARS1_BEGIN,5, 4 ),'-',left(LASTJOBYEARS1_BEGIN,3),'-','01'),
+    left(LASTJOBYEARS1_BEGIN,3),
+        REPLACE(TRIM(LASTJOBYEARS1_FINISH),'- Present',''),
+    CONCAT (substr(TRIM(LASTJOBYEARS1_FINISH),5, 4 ),'-',left(TRIM(LASTJOBYEARS1_FINISH),3),'-','01'),
+    left(TRIM(LASTJOBYEARS1_FINISH),3),
+        LASTJOBDURATION1,
+        LASTJOBLOCATION1,
+        PASTJOB2,
+        PASTCOMPANY2,
+        REPLACE(PASTJOBYEARS2_BEGIN,'- Present',''),
+    CONCAT (substr(PASTJOBYEARS2_BEGIN,5, 4 ),'-',left(PASTJOBYEARS2_BEGIN,3),'-','01'),
+    left(PASTJOBYEARS2_BEGIN,3),
+        TRIM(PASTJOBYEARS2_FINISH),
+    CONCAT (substr(TRIM(PASTJOBYEARS2_FINISH),5, 4 ),'-',left(TRIM(PASTJOBYEARS2_FINISH),3),'-','01'),
+    left(TRIM(PASTJOBYEARS2_FINISH),3),
+        PASTDURATION2,
+        PASTLOCATION2,
+        PASTJOB3,
+        PASTCOMPANY3,
+        REPLACE(PASTJOBYEARS3_BEGIN,'-Present',''),
+    CONCAT (substr(PASTJOBYEARS3_BEGIN,5, 4 ),'-',left(PASTJOBYEARS3_BEGIN,3),'-','01'),
+    left(PASTJOBYEARS3_BEGIN,3),
+        TRIM(PASTJOBYEARS3_FINISH),
+    CONCAT (substr(TRIM(PASTJOBYEARS3_FINISH),5, 4 ),'-',left(TRIM(PASTJOBYEARS3_FINISH),3),'-','01'),
+    left(TRIM(PASTJOBYEARS3_FINISH),3),
+        PASTDURATION3,
+        PASTLOCATION3,
+        current_date()
+FROM ""LINK"".""PUBLIC"".""LINKEDIN1"";
 
 -----------------------------------------------------------------------------------------
 view 2
 
-create or replace view LINK.PUBLIC.JPB_TYPES2(
-	PROFILELINK1,
-	POSITION,
-	CURRENTJOB,
-	PROFILELINK2,
-	POSITION2,
-	CURRENTJOB2,
-	PROFILELINK3,
-	POSITION3,
-	CURRENTJOB3,
-	PROFILELINK4,
-	LAST_POSITION,
-	LASTJOB,
-	PROFILELINK5,
-	LAST_POSITION2,
-	PASTJOB2,
-	PROFILELINK6,
-	LAST_POSITION3,
-	PASTJOB3
+create or replace view LINK.PUBLIC.DURATION_NEW5(
+        PROFILELINK,
+        CURRENTJOB,
+        ROUND_JOBDATE1,
+        CURRENTJOB2,
+        ROUND_CURRENTJOBDATE2,
+        CURRENTJOB3,
+        ROUND_CURRENTJOBDATE3,
+        LASTJOB,
+        ROUND_LASTJOBDATE1_FINISH,
+        PASTJOB2,
+        ROUND_PASTJOBDATE2_FINISH,
+        PASTJOB3,
+        ROUND_PASTJOBDATE3_FINISH
 ) as 
-
-select a.PROFILELINK as "a.PROFILELINK",
-POSITION,
+select PROFILELINK,
 CURRENTJOB,
-b.PROFILELINK as "b.PROFILELINK",
-POSITION2,
+ROUND_JOBDATE1,
 CURRENTJOB2,
-c.PROFILELINK as "c.PROFILELINK",
-POSITION3,
+ROUND_CURRENTJOBDATE2,
 CURRENTJOB3,
-d.PROFILELINK as "d.PROFILELINK",
-LAST_POSITION,
+ROUND_CURRENTJOBDATE3,
 LASTJOB,
-e.PROFILELINK as "e.PROFILELINK",
-LAST_POSITION2,
+ROUND_LASTJOBDATE1_FINISH,
 PASTJOB2,
-f.PROFILELINK as "f.PROFILELINK",
-LAST_POSITION3,
-PASTJOB3
-
-from
-(select PROFILELINK, CURRENTJOB, COMPANY1, POSITION_SCOPE, replace (POSITION_SCOPE, POSITION_SCOPE, 'Full Time') as POSITION
-
-from "LINK"."PUBLIC"."Job_Types"
-WHERE COMPANY1 not like '%null%'
-and   COMPANY1 not like '%Null%'
-and   COMPANY1 not like '%NULL%'
-and   COMPANY1 not like '%NULL%'
-and   POSITION_SCOPE not like '%Part-time%'
-) a
-
-full join
-
-(select PROFILELINK, CURRENTJOB2, CURRENTCOMPANY2, replace (CURRENTCOMPANY2, CURRENTCOMPANY2, 'Full Time') as POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB2	 not like '%null%'
-and   CURRENTJOB2	 not like '%Null%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTJOB2	 not like '%NULL%'
-and   CURRENTCOMPANY2 not like '%Part-time%' ) b
-
-on a.PROFILELINK=b.PROFILELINK
-
-full join
-
-
-(select PROFILELINK, CURRENTJOB3, CURRENTCOMPANY3, replace (CURRENTCOMPANY3, CURRENTCOMPANY3, 'Full Time') as POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE CURRENTJOB3	 not like '%null%'
-and   CURRENTJOB3	 not like '%Null%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTJOB3	 not like '%NULL%'
-and   CURRENTCOMPANY3 not like '%Part-time%') c
-
-on a.PROFILELINK=c.PROFILELINK
-
-full join
-
-(select PROFILELINK, LASTJOB, LASTJOB_COMPANY	, replace (LASTJOB_COMPANY	, LASTJOB_COMPANY	, 'Full Time') as last_POSITION
-from "LINK"."PUBLIC"."Job_Types"
-WHERE LASTJOB	 not like '%null%'
-and   LASTJOB	 not like '%Null%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB	 not like '%NULL%'
-and   LASTJOB_COMPANY	 not like '%Part-time%') d
-
-on a.PROFILELINK=d.PROFILELINK
-
-full join 
-
-(select PROFILELINK, PASTJOB2, PASTCOMPANY2		, replace (PASTCOMPANY2		, PASTCOMPANY2		, 'Full Time') as last_POSITION2
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB2	 not like '%null%'
-and   PASTJOB2	 not like '%Null%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTJOB2	 not like '%NULL%'
-and   PASTCOMPANY2		 not like '%Part-time%') e
-
-on a.PROFILELINK=e.PROFILELINK
-
-full join 
-
-(select PROFILELINK, PASTJOB3, PASTCOMPANY3		, replace (PASTCOMPANY3		, PASTCOMPANY3		, 'Full Time') as last_POSITION3
-from "LINK"."PUBLIC"."Job_Types"
-WHERE PASTJOB3	 not like '%null%'
-and   PASTJOB3	 not like '%Null%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTJOB3	 not like '%NULL%'
-and   PASTCOMPANY3		 not like '%Part-time%') f
-
-on a.PROFILELINK=f.PROFILELINK
-
-;
-
------------------------------------------------------------------------------------------
-view 3
-
-create or replace view LINK.PUBLIC.ALL_POSITIONS_NUMBER(
-	FULL_TIME1,
-	FULL_TIME2,
-	FULL_TIME3,
-	FULL_TIME4,
-	FULL_TIME5,
-	FULL_TIME6
-) as select 
-count(a.POSITION) as Full_Time1,
-count(b.POSITION2) as Full_Time2,
-count(c.POSITION3) as Full_Time3,
-count(d.LAST_POSITION	) as Full_Time4,
-count(e.LAST_POSITION2) as Full_Time5,
-count(f.LAST_POSITION3) as Full_Time6
-from 
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
-CURRENTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) a
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
-CURRENTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) b
-on a.PROFILELINK1=b.PROFILELINK2
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE  CURRENTJOB3	LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) c
-on a.PROFILELINK1=c.PROFILELINK3
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- LASTJOB LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) d
-on a.PROFILELINK1=d.PROFILELINK4
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- PASTJOB2 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) e
-on a.PROFILELINK1=e.PROFILELINK5
-
-full join
-
-(select *
-from "LINK"."PUBLIC"."JPB_TYPES2"
-WHERE 
- PASTJOB3 LIKE  any ('%Analyst%','%analyst','%ANALYST%')
-) f
-
-on a.PROFILELINK1=f.PROFILELINK6
-
-
------------------------------------------------------------------------------------------
-view 4
-
-create or replace view LINK.PUBLIC."Full_Time_Analyst_Total"(
-	TOTAL
-) as
-select sum (
-Full_Time1 + Full_Time2 + Full_Time3 + Full_Time4 + Full_Time5 + Full_Time6
-) as Total
-from
-"LINK"."PUBLIC"."ALL_POSITIONS_NUMBER";
-
------------------------------------------------------------------------------------------
-view 5
-
-create or replace view LINK.PUBLIC."Part_Time_Analyst_Total"(
-	TOTAL
-) as
-select count(*) as Total
-from (
-select profilelink, position_scope,currentjob
-from  "LINK"."PUBLIC"."linkedin"
-where  position_scope  like '%Part-time%' and CURRENTJOB LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,CURRENTCOMPANY2
-,currentjob2
-from  "LINK"."PUBLIC"."linkedin"
-where  CURRENTCOMPANY2
-  like '%Part-time%' and CURRENTJOB2 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,CURRENTCOMPANY3
-,currentjob3
-from  "LINK"."PUBLIC"."linkedin"
-where  CURRENTCOMPANY3
-  like '%Part-time%' and CURRENTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
-union
-  
-select profilelink,lastjob,lastjob_company
-from "LINK"."PUBLIC"."linkedin"
-where lastjob_company like '%Part-time%' and lastjob like any ('%Analyst%','%analyst','%ANALYST%')
-union 
-select profilelink,pastjob2,pastcompany2
-from "LINK"."PUBLIC"."linkedin"
-where pastcompany2 like '%Part-time%' and pastjob2 like any ('%Analyst%','%analyst','%ANALYST%')
-union
-select profilelink,pastjob3,pastcompany3
-from "LINK"."PUBLIC"."linkedin"
-where pastcompany3 like '%Part-time%' and pastjob3 like any ('%Analyst%','%analyst','%ANALYST%')
-)
-;
-
------------------------------------------------------------------------------------------
-View 6
-
-create or replace view LINK.PUBLIC."Part&Full_Time_Analyst_Total"(
-	JOB_TYPE,
-	TOTAL
-) as
-
-
-
-
-select case when Total = (select TOTAL from "LINK"."PUBLIC"."Part_Time_Analyst_Total") then 'Part Time'
-            when Total = (select TOTAL from "LINK"."PUBLIC"."Full_Time_Analyst_Total") then 'Full Time'
-            end as Job_Type,
-            Total
+ROUND_PASTJOBDATE2_FINISH,
+PASTJOB3,
+ROUND_PASTJOBDATE3_FINISH
 from 
 (
-select Total
-from 
-"LINK"."PUBLIC"."Part_Time_Analyst_Total" 
-union
-select Total
-from
-"LINK"."PUBLIC"."Full_Time_Analyst_Total" 
-  );
+SELECT
+NEW4.PROFILELINK,NEW4.CURRENTJOB,ROUND(div0((CURRENT_DATE()-NEW4.JOBDATE1::DATE),365),1) as ROUND_JOBDATE1,NEW4.CURRENTJOB2,
+ROUND(div0((CURRENT_DATE()-NEW4.CURRENTJOBDATE2::DATE),365),1) as ROUND_CURRENTJOBDATE2,
+NEW4.CURRENTJOB3,ROUND(div0((CURRENT_DATE()-NEW4.CURRENTJOBDATE3::DATE),365),1) as ROUND_CURRENTJOBDATE3,
+NEW4.LASTJOB,
+ROUND(div0((NEW4.LASTJOBDATE1_FINISH::DATE-NEW4.LASTJOBDATE1_BEGIN::DATE),365),1) as ROUND_LASTJOBDATE1_FINISH,
+NEW4.PASTJOB2,
+ROUND(div0((NEW4.PASTJOBDATE2_FINISH::DATE-NEW4.PASTJOBDATE2_BEGIN::DATE),365),1) as ROUND_PASTJOBDATE2_FINISH,
+NEW4.PASTJOB3,
+ROUND(div0((NEW4.PASTJOBDATE3_FINISH::DATE-NEW4.PASTJOBDATE3_BEGIN::DATE),365),1) as ROUND_PASTJOBDATE3_FINISH
+FROM
+(
+SELECT 
+A.PROFILELINK ,
+A.CURRENTJOB,
+replace (A.JOBDATE1,' - P-01-01', '1900-01-01') as JOBDATE1,
+B.CURRENTJOB2,
+replace (B.CURRENTJOBDATE2,' - P-01-01', '1900-01-01') as CURRENTJOBDATE2,
+C.CURRENTJOB3,
+C.CURRENTJOBDATE3,
+D.LASTJOB,
+D.LASTJOBDATE1_BEGIN,
+E.LASTJOBDATE1_FINISH,
+F.PASTJOB2,
+F.PASTJOBDATE2_BEGIN,
+G.PASTJOBDATE2_FINISH,
+H.PASTJOB3,
+H.PASTJOBDATE3_BEGIN,
+I.PASTJOBDATE3_FINISH,
+ROUND(div0((I.PASTJOBDATE3_FINISH::DATE-H.PASTJOBDATE3_BEGIN::DATE),365),1),
+CURRENT_DATE()
+
+
+FROM 
+(SELECT PROFILELINK,CURRENTJOB,JOBDATE,
+ CASE when JOBDATE in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01') 
+  WHEN month_name like ('Jan') then CONCAT (LEFT (JOBDATE,4),'-','01','-','01')
+WHEN month_name like ('Feb') then CONCAT (LEFT (JOBDATE,4),'-','02','-','01') 
+WHEN month_name  like ('Mar') then CONCAT (LEFT (JOBDATE,4),'-','03','-','01')
+WHEN month_name  like ('Apr') then CONCAT (LEFT (JOBDATE,4),'-','04','-','01')
+WHEN month_name  like ('May') then CONCAT (LEFT (JOBDATE,4),'-','05','-','01')
+WHEN month_name  like ('Jun') then CONCAT (LEFT (JOBDATE,4),'-','06','-','01')
+WHEN month_name like ('Jul') then CONCAT (LEFT (JOBDATE,4),'-','07','-','01')
+WHEN month_name like ('Aug') then CONCAT (LEFT (JOBDATE,4),'-','08','-','01')
+WHEN month_name like ('Sep') then CONCAT (LEFT (JOBDATE,4),'-','09','-','01')
+WHEN month_name like ('Oct') then CONCAT (LEFT (JOBDATE,4),'-','10','-','01')
+WHEN month_name like ('Nov') then CONCAT (LEFT (JOBDATE,4),'-','11','-','01')
+WHEN month_name like ('Dec') then CONCAT (LEFT (JOBDATE,4),'-','12','-','01')
+else CONCAT (LEFT (JOBDATE,4),'-','01','-','01')
+end AS JOBDATE1
+from ""LINK"".""PUBLIC"".""DURATION_NEW"") A
+
+JOIN 
+
+(
+SELECT PROFILELINK, CURRENTJOB2,
+CASE when CURRENTJOBDATE2 in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01') 
+WHEN MONTH_NAME2 like ('Jan') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','01','-','01')
+WHEN MONTH_NAME2 like ('Feb') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','02','-','01') 
+WHEN MONTH_NAME2  like ('Mar') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','03','-','01')
+WHEN MONTH_NAME2  like ('Apr') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','04','-','01')
+WHEN MONTH_NAME2  like ('May') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','05','-','01')
+WHEN MONTH_NAME2  like ('Jun') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','06','-','01')
+WHEN MONTH_NAME2 like ('Jul') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','07','-','01')
+WHEN MONTH_NAME2 like ('Aug') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','08','-','01')
+WHEN MONTH_NAME2 like ('Sep') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','09','-','01')
+WHEN MONTH_NAME2 like ('Oct') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','10','-','01')
+WHEN MONTH_NAME2 like ('Nov') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','11','-','01')
+WHEN MONTH_NAME2 like ('Dec') then CONCAT (LEFT (CURRENTJOBDATE2,4),'-','12','-','01')
+else CONCAT (LEFT (CURRENTJOBDATE2,4),'-','01','-','01')
+end AS CURRENTJOBDATE2
+from ""LINK"".""PUBLIC"".""DURATION_NEW"") B
+ON A.PROFILELINK=B.PROFILELINK
+
+Join
+
+(
+SELECT PROFILELINK,CURRENTJOB3,
+CASE when CURRENTJOBDATE3 in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01') 
+WHEN MONTH_NAME3 like ('Jan') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','01','-','01')
+WHEN MONTH_NAME3 like ('Feb') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','02','-','01') 
+WHEN MONTH_NAME3  like ('Mar') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','03','-','01')
+WHEN MONTH_NAME3  like ('Apr') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','04','-','01')
+WHEN MONTH_NAME3  like ('May') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','05','-','01')
+WHEN MONTH_NAME3  like ('Jun') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','06','-','01')
+WHEN MONTH_NAME3 like ('Jul') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','07','-','01')
+WHEN MONTH_NAME3 like ('Aug') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','08','-','01')
+WHEN MONTH_NAME3 like ('Sep') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','09','-','01')
+WHEN MONTH_NAME3 like ('Oct') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','10','-','01')
+WHEN MONTH_NAME3 like ('Nov') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','11','-','01')
+WHEN MONTH_NAME3 like ('Dec') then CONCAT (LEFT (CURRENTJOBDATE3,4),'-','12','-','01')
+else CONCAT (LEFT (CURRENTJOBDATE3,4),'-','01','-','01')
+end AS CURRENTJOBDATE3
+from ""LINK"".""PUBLIC"".""DURATION_NEW"") c
+ON A.PROFILELINK=c.PROFILELINK
+                                      
+JOIN
+
+(
+SELECT PROFILELINK,LASTJOB, 
+CASE when LASTJOBDATE1_BEGIN in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Jan') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','01','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Feb') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','02','-','01')
+WHEN LASTMONTH_NAME1_BEGIN  like ('Mar') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','03','-','01')
+WHEN LASTMONTH_NAME1_BEGIN  like ('Apr') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','04','-','01')
+WHEN LASTMONTH_NAME1_BEGIN  like ('May') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','05','-','01')
+WHEN LASTMONTH_NAME1_BEGIN  like ('Jun') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','06','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Jul') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','07','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Aug') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','08','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Sep') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','09','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Oct') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','10','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Nov') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','11','-','01')
+WHEN LASTMONTH_NAME1_BEGIN like ('Dec') then CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','12','-','01')
+else CONCAT (LEFT (LASTJOBDATE1_BEGIN,4),'-','01','-','01')
+end AS LASTJOBDATE1_BEGIN
+FROM ""LINK"".""PUBLIC"".""DURATION_NEW"") D
+ON A.PROFILELINK= D.PROFILELINK
+
+JOIN 
+
+(SELECT PROFILELINK,LASTJOB, 
+CASE when LASTJOBDATE1_FINISH in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Jan') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','01','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Feb') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','02','-','01') 
+WHEN LASTMONTH_NAME1_FINISH  like ('Mar') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','03','-','01')
+WHEN LASTMONTH_NAME1_FINISH  like ('Apr') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','04','-','01')
+WHEN LASTMONTH_NAME1_FINISH  like ('May') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','05','-','01')
+WHEN LASTMONTH_NAME1_FINISH  like ('Jun') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','06','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Jul') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','07','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Aug') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','08','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Sep') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','09','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Oct') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','10','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Nov') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','11','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Dec') then CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','12','-','01')
+else CONCAT (LEFT (LASTJOBDATE1_FINISH,4),'-','01','-','01')
+end AS LASTJOBDATE1_FINISH
+FROM ""LINK"".""PUBLIC"".""DURATION_NEW"") E
+ON A.PROFILELINK= E.PROFILELINK
+
+JOIN 
+(SELECT PROFILELINK,PASTJOB2,
+CASE when PASTJOBDATE2_BEGIN in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Jan') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','01','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Feb') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','02','-','01') 
+WHEN LASTMONTH_NAME1_FINISH  like ('Mar') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','03','-','01')
+WHEN LASTMONTH_NAME1_FINISH  like ('Apr') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','04','-','01')
+WHEN LASTMONTH_NAME1_FINISH  like ('May') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','05','-','01')
+WHEN LASTMONTH_NAME1_FINISH  like ('Jun') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','06','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Jul') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','07','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Aug') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','08','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Sep') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','09','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Oct') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','10','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Nov') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','11','-','01')
+WHEN LASTMONTH_NAME1_FINISH like ('Dec') then CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','12','-','01')
+else CONCAT (LEFT (PASTJOBDATE2_BEGIN,4),'-','01','-','01')
+end AS PASTJOBDATE2_BEGIN
+FROM ""LINK"".""PUBLIC"".""DURATION_NEW"") F
+ON A.PROFILELINK= F.PROFILELINK
+
+JOIN 
+(SELECT PROFILELINK, PASTJOB2,
+CASE when PASTJOBDATE2_FINISH  in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Jan') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','01','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Feb') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','02','-','01') 
+WHEN PASTJOBMONTH_NAME2_FINISH  like ('Mar') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','03','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH  like ('Apr') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','04','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH  like ('May') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','05','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH  like ('Jun') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','06','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Jul') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','07','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Aug') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','08','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Sep') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','09','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Oct') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','10','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Nov') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','11','-','01')
+WHEN PASTJOBMONTH_NAME2_FINISH like ('Dec') then CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','12','-','01')
+else CONCAT (LEFT (PASTJOBDATE2_FINISH,4),'-','01','-','01')
+end AS PASTJOBDATE2_FINISH
+FROM ""LINK"".""PUBLIC"".""DURATION_NEW"") G
+ON A.PROFILELINK= G.PROFILELINK
+
+JOIN 
+(SELECT PROFILELINK, PASTJOB3,
+CASE when PASTJOBDATE3_BEGIN  in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Jan') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','01','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Feb') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','02','-','01') 
+WHEN PASTJOBMONTH_NAME3_BEGIN  like ('Mar') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','03','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN  like ('Apr') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','04','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN  like ('May') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','05','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN  like ('Jun') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','06','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Jul') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','07','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Aug') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','08','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Sep') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','09','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Oct') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','10','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Nov') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','11','-','01')
+WHEN PASTJOBMONTH_NAME3_BEGIN like ('Dec') then CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','12','-','01')
+else CONCAT (LEFT (PASTJOBDATE3_BEGIN,4),'-','01','-','01')
+end AS PASTJOBDATE3_BEGIN
+FROM ""LINK"".""PUBLIC"".""DURATION_NEW"") H
+ON A.PROFILELINK= H.PROFILELINK
+
+JOIN
+(SELECT PROFILELINK,PASTJOB3,
+CASE when PASTJOBDATE3_FINISH  in ('- P-202-01', '- P-201-01', '-190-01', '--01','- P-01-01') then CONCAT ('1900','-','01','-','01') 
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Jan') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','01','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Feb') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','02','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH  like ('Mar') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','03','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH  like ('Apr') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','04','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH  like ('May') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','05','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH  like ('Jun') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','06','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Jul') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','07','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Aug') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','08','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Sep') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','09','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Oct') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','10','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Nov') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','11','-','01')
+WHEN PASTJOBMONTH_NAME3_FINISH like ('Dec') then CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','12','-','01')
+else CONCAT (LEFT (PASTJOBDATE3_FINISH,4),'-','01','-','01')
+end AS PASTJOBDATE3_FINISH
+FROM ""LINK"".""PUBLIC"".""DURATION_NEW"") I
+ON A.PROFILELINK= I.PROFILELINK
+
+
+) 
+  
+  
+  NEW4
+
+
+);"
 ```
 
 ### 6) Bussiness Question - What is the Percentage of experienced Military veterans?
 ```sql
-view 1
+"view 1
 
 create or replace view LINK.PUBLIC.IDF(
-	PROFILELINK,
-	CURRENTJOB,
-	COMPANY1,
-	CURRENTJOB2,
-	CURRENTCOMPANY2,
-	CURRENTJOB3,
-	CURRENTCOMPANY3,
-	LASTJOB,
-	LASTJOB_COMPANY,
-	PASTJOB2,
-	PASTCOMPANY2,
-	PASTJOB3,
-	PASTCOMPANY3
+        PROFILELINK,
+        CURRENTJOB,
+        COMPANY1,
+        CURRENTJOB2,
+        CURRENTCOMPANY2,
+        CURRENTJOB3,
+        CURRENTCOMPANY3,
+        LASTJOB,
+        LASTJOB_COMPANY,
+        PASTJOB2,
+        PASTCOMPANY2,
+        PASTJOB3,
+        PASTCOMPANY3
 ) as
 SELECT profilelink,CURRENTJOB,company1,CURRENTJOB2,CURRENTCOMPANY2,CURRENTJOB3,CURRENTCOMPANY3,LASTJOB,LASTJOB_COMPANY,PASTJOB2,PASTCOMPANY2,PASTJOB3,PASTCOMPANY3
 FROM LINK.PUBLIC.LINKEDIN
@@ -1505,5 +1583,5 @@ OR  CURRENTCOMPANY2 LIKE ANY('%IDF%','%8200%','%Israel Defense Forces%','%MILITA
 OR CURRENTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND CURRENTJOB3 LIKE ('%Analyst%')
 OR LASTJOB_COMPANY LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND  LASTJOB LIKE ('%Analyst%')
 OR PASTCOMPANY2 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB2 LIKE ('%Analyst%')
-OR PASTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB3 LIKE ('%Analyst%');
+OR PASTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB3 LIKE ('%Analyst%');"
 ```
