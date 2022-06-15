@@ -9,40 +9,27 @@ The dataset represents 679 real Data Analyst profiles in Israel witch scraped wi
 
 The project consists :
 1) Project Overview & Explanation - PDF
-2) Business questions - Excel
-SQL queries (Views created on Snowflake Data Warehouse),
-Power BI dashboards, and a presentation,
-Presenta
-Characterization of Business Questions.xlsx
-Add files via upload
-3 days ago
-Main Table - CSV.xlsx
-Add files via upload
-3 days ago
-Project Dashboard - Final Presentaition.pbix
-Add files via upload
-3 days ago
-Project Dashboard - PDF.pptx
-Add files via upload
-3 days ago
-.pdf
+2) Business questions - Excel 
+3) SQL queries - divided to Views (Snowflake Datawarehouse) - at the bottom of this document.
+4) Conclusions & Visualization - Power BI Dashboard
+
 
 ## Project Levels
 
 |Level |Explnation|
 |------|----------|
-|Data Scraping|Download C++ Program to do Scraping....|
-|Data Cleansing|Download C++ Program to do Scraping....|
-|Classify Business Questions|Download C++ Program to do Scraping....|
-|Data Analysis|Download C++ Program to do Scraping....|
-|Visualization|Download C++ Program to do Scraping....|
-
+|Data Scraping|Download C++ Program for Scraping and specify the profiles fron Data Analysts in Israel, Upload the data to Snowflake Data Warehouse and create Schemes and Views|
+|Data Cleaning|Using SQL functions we adjust the data and the table to a better way we can use and query the data for our business questions|
+|Classify Business Questions|Asking and finding right questions to better understand the needs and the proffestion of Data Analyst in Israel|
+|Data Analysis|Query the data using SQL functions in Snowflake platform for finding conclusions|
+|Visualization|Connecting our Data Warehouse on Snowflake to Power BI and creating dashboard and graphs for presenting our conclusions|
 
 
 
 ## SQL Queries
 ### 1) Bussiness Question - Degree vs. Course, Which Path will Increase your Chances to become data analyst?
-
+Note : Becuase of the raw data from the scraping tool, most of the questions contain more Views build one on another to clean and preper the data.
+       Each View seperated with doted line (------)
 ```sql
 view 1
 
