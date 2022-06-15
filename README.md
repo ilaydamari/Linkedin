@@ -33,7 +33,7 @@ Note : Becuase of the raw data from the scraping tool, most of the questions con
        
 ### 1) Bussiness Question - Degree vs. Course, Which path will Increase your chances to become Data Analyst?
 ```sql
-"view 1
+view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
         PROFILELINK,
@@ -328,7 +328,7 @@ and EDUCATION not like '%null%';"
 
 ### 2) Bussiness Question - Wich Degree is the most common between Data Analysts?
 ```sql
-"view 1
+view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
         PROFILELINK,
@@ -692,7 +692,7 @@ from ""LINK"".""PUBLIC"".""Sum_of_Education_Parts"";"
 
 ### 3) Bussiness Question - In what areas do most Analysts work at?
 ```sql
-"View 1
+View 1
 create or replace view LINK.PUBLIC.LOCATIONS(
         PROFILELINK,
         LOCATION,
@@ -871,7 +871,7 @@ order by Number desc;"
 ```
 ### 4) Bussiness Question - What is the Percentage of Analysts that Work Part Time vs Full Time?
 ```sql
-"view 1 
+view 1 
 
 create or replace view LINK.PUBLIC.""Job_Types""(
         PROFILELINK,
@@ -1176,7 +1176,7 @@ from
 ```
 ### 5) Bussiness Question - How Long it Will Take to be Senior Analyst/DS/DE
 ```sql
-"view 1
+view 1
 
 create or replace view LINK.PUBLIC.DURATION_NEW(
         PROFILELINK,
@@ -1559,7 +1559,7 @@ ON A.PROFILELINK= I.PROFILELINK
 
 ### 6) Bussiness Question - What is the Percentage of experienced Military veterans?
 ```sql
-"view 1
+view 1
 
 create or replace view LINK.PUBLIC.IDF(
         PROFILELINK,
