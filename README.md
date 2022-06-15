@@ -1,5 +1,17 @@
 # Project Preview
-bla bla
+Linkedin Project
+
+This is one of 5 projects in a volunteer program called "JunDatyst" - a project to help junior data analysts gain professional experience and produce data analysis project.
+
+This is a unique project that analyzes the profession of Data Analyst in Israel on Linkedin's platform.
+All the data in this project is real information from profiles of Data Analysts in Israel.
+The dataset represents 679 real Data Analyst profiles in Israel witch scraped with c++ scraping tool during Jun 2022 - May 2022.
+
+The project consists :
+Business questions (in an Excel spreadsheet),
+SQL queries (Views created on Snowflake Data Warehouse),
+Power BI dashboards, and a presentation,
+Presenta
 
 
 ## Project Levels
@@ -7,6 +19,11 @@ bla bla
 |Level |Explnation|
 |------|----------|
 |Data Scraping|Download C++ Program to do Scraping....|
+|Data Cleansing|Download C++ Program to do Scraping....|
+|Classify Business Questions|Download C++ Program to do Scraping....|
+|Data Analysis|Download C++ Program to do Scraping....|
+|Visualization|Download C++ Program to do Scraping....|
+
 
 
 
