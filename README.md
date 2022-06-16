@@ -40,10 +40,6 @@ Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido K
 ## Summary
 We had a great time and learned a lot along the way.
 
-From the difficulty of clearing the data 
-ELT Proccess to Snowflake 
-and the amazing conclusions !
-
-It was intresting working as a team and diving into the data.
+From the difficulty of clearing the data, the ELT Proccess to Snowflake and the finding the conclusions !
 
 Thank you for reading along!
