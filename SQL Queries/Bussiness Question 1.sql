@@ -1,6 +1,5 @@
 Bussiness Question - Degree vs. Course, Which path will Increase your chances to become Data Analyst?
 
-```sql
 view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
@@ -292,4 +291,4 @@ and PART1_SCHOOL not like '%Univ%'
 and PART1_SCHOOL not like '%academic%'
 and PART1_SCHOOL not like '%Academic%'
 and EDUCATION not like '%null%';"
-```
+
