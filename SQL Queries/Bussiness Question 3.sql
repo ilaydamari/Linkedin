@@ -1,7 +1,7 @@
 Bussiness Question - In what areas do most Analysts work at?
 
-```sql
 View 1
+
 create or replace view LINK.PUBLIC.LOCATIONS(
         PROFILELINK,
         LOCATION,
@@ -177,4 +177,4 @@ profilelink, LOCATION_NUM
 group by 
 1,2, 3
 order by Number desc;"
-```
+
