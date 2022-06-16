@@ -7,6 +7,11 @@ This is a unique project that analyzes the profession of Data Analyst in Israel 
 All the data in this project is real information from profiles of Data Analysts in Israel.
 The dataset represents 679 real Data Analyst profiles in Israel witch scraped with c++ scraping tool during Jun 2022 - May 2022.
 
+Platforms :
+- Database - Linkedin
+- Data Analysis – Snowflake Data Warehouse
+- Visualization - Power BI
+
 The project consists :
 - [x] Project Overview & Explanation - PDF
 - [x] Raw Data - CSV
@@ -14,7 +19,7 @@ The project consists :
 - [x] Conclusions & Visualization - Power BI Dashboard + Online
 - [x] SQL queries - divided to Views (Snowflake Datawarehouse) - at the bottom of this document.
 
-## The team
+## The Team
 Team leader : [Ilay Damari](https://www.linkedin.com/in/ilay-damari/)
 
 Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido Kahlon](https://www.linkedin.com/in/ido-kahlon/), [Ayelet Biton](https://www.linkedin.com/in/ayelet-biton-8779b01b9/)
