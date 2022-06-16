@@ -1,6 +1,5 @@
 Bussiness Question - What is the Percentage of Analysts that Work Part Time vs Full Time?
 
-```sql
 view 1 
 
 create or replace view LINK.PUBLIC.""Job_Types""(
@@ -303,4 +302,3 @@ select Total
 from
 ""LINK"".""PUBLIC"".""Full_Time_Analyst_Total"" 
   );"
-```
