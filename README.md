@@ -29,7 +29,7 @@ Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido K
 |Data Analysis|Query the data using SQL functions in Snowflake platform for finding conclusions|
 |Visualization|Connecting our Data Warehouse on Snowflake to Power BI and creating dashboard and graphs for presenting our conclusions|
 
-![](Schema.jpg)
+![Data Route](Schema.jpg)
 
 ## Online Power BI report
 [Link to Report](https://app.powerbi.com/view?r=eyJrIjoiMWQ3YjkwOGYtYmRjYy00MmQwLThmNzAtZTRmZmU4MmI4MGNkIiwidCI6IjMyMTc0NmM2LTQwMzQtNGZjYy1hZDczLTk4NjdlYTRmNGNiMiIsImMiOjl9&pageName=ReportSectionb50a70a6214409b70ba8)
