@@ -38,8 +38,8 @@ Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido K
 [Link to Report](https://app.powerbi.com/view?r=eyJrIjoiMWQ3YjkwOGYtYmRjYy00MmQwLThmNzAtZTRmZmU4MmI4MGNkIiwidCI6IjMyMTc0NmM2LTQwMzQtNGZjYy1hZDczLTk4NjdlYTRmNGNiMiIsImMiOjl9&pageName=ReportSectionb50a70a6214409b70ba8)
 
 ## Summary
-We had a great time and learned a lot along the way.
+We had a great time and learned a lot about Data!
 
-From the difficulty of clearing the data, the ELT Proccess to Snowflake and the finding the conclusions !
+From the difficulty of clearing the data, the ELT Proccess to Snowflake and finding the conclusions !
 
-Thank you for reading along!
+Thank you for Reading!
