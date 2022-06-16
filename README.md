@@ -31,8 +31,7 @@ Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido K
 
 ## Data Route
 ![](Schema.jpg)
-![](Education.jpg) ![](Jobs.jpg)
 
 ## Online Power BI report
-
+![](Education.jpg) ![](Jobs.jpg)
 [Link to Report](https://app.powerbi.com/view?r=eyJrIjoiMWQ3YjkwOGYtYmRjYy00MmQwLThmNzAtZTRmZmU4MmI4MGNkIiwidCI6IjMyMTc0NmM2LTQwMzQtNGZjYy1hZDczLTk4NjdlYTRmNGNiMiIsImMiOjl9&pageName=ReportSectionb50a70a6214409b70ba8)
