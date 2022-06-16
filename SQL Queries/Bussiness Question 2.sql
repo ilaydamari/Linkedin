@@ -1,6 +1,5 @@
 Bussiness Question - Wich Degree is the most common between Data Analysts?
 
-```sql
 view 1
 
 create or replace view LINK.PUBLIC.EDUCATION(
@@ -361,4 +360,3 @@ case when education like 'Course' then 'Course'
      end as Education_Type,
 PEOPLE
 from ""LINK"".""PUBLIC"".""Sum_of_Education_Parts"";"
-```
