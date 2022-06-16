@@ -28,3 +28,6 @@ Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido K
 |Classify Business Questions|Asking and finding right questions to better understand the needs and the proffestion of Data Analyst in Israel|
 |Data Analysis|Query the data using SQL functions in Snowflake platform for finding conclusions|
 |Visualization|Connecting our Data Warehouse on Snowflake to Power BI and creating dashboard and graphs for presenting our conclusions|
+
+## Online Power BI report
+https://app.powerbi.com/view?r=eyJrIjoiMWQ3YjkwOGYtYmRjYy00MmQwLThmNzAtZTRmZmU4MmI4MGNkIiwidCI6IjMyMTc0NmM2LTQwMzQtNGZjYy1hZDczLTk4NjdlYTRmNGNiMiIsImMiOjl9&pageName=ReportSectionb50a70a6214409b70ba8
