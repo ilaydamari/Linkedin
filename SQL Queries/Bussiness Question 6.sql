@@ -1,6 +1,5 @@
 Bussiness Question - What is the Percentage of experienced Military veterans?
 
-```sql
 view 1
 
 create or replace view LINK.PUBLIC.IDF(
@@ -26,4 +25,3 @@ OR CURRENTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITA
 OR LASTJOB_COMPANY LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND  LASTJOB LIKE ('%Analyst%')
 OR PASTCOMPANY2 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB2 LIKE ('%Analyst%')
 OR PASTCOMPANY3 LIKE ANY ('%IDF%','%8200%','%Israel Defense Forces%','%MILITARY%','%Intelligence%','%9900%') AND PASTJOB3 LIKE ('%Analyst%');"
-```
