@@ -33,7 +33,7 @@ Team members : [Nofar Hakmon](https://www.linkedin.com/in/nofar-hakmon/), [Ido K
 ![](Schema.jpg)
 
 ## Online Power BI report
-![](Education.jpg) 
+![](Documents/Education.jpg) 
 
 ![](Jobs.jpg)
 
