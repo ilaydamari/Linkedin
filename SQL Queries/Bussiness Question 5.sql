@@ -1,6 +1,5 @@
 Bussiness Question - How Long it Will Take to be Senior Analyst/DS/DE
 
-```sql
 view 1
 
 create or replace view LINK.PUBLIC.DURATION_NEW(
@@ -380,4 +379,4 @@ ON A.PROFILELINK= I.PROFILELINK
 
 
 );"
-```
+
