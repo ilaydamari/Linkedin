@@ -58,7 +58,7 @@ where PASTJOB3 LIKE ANY ('%Analyst%','%analyst%','%ANALYST%')
 ;
 
 -----------------------------------------------------------------------------------------
-view 
+view 2
 
 create or replace view LINK.PUBLIC.EDUCATION_PARTS(
         EDUCATION,
@@ -120,7 +120,7 @@ from ""LINK"".""PUBLIC"".""EDUCATION""
 ;
 
 -----------------------------------------------------------------------------------------
-view 
+view 3
 
 create or replace view LINK.PUBLIC.EDUCATION_MAX(
         PROFILELINK,
@@ -154,7 +154,7 @@ order by 1;
 
 -----------------------------------------------------------------------------------------
 
-view 
+view 4
 
 create or replace view LINK.PUBLIC.EDUCATION_MAX2(
         PROFILELINK,
@@ -187,7 +187,7 @@ group by 1,2,3,4
 order by 1;
 
 -----------------------------------------------------------------------------------------
-view
+view 5
 
 create or replace view LINK.PUBLIC.""People_Only_Course""(
         PROFILELINK,
